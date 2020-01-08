@@ -1,0 +1,39 @@
+version: '3'
+services:
+    app:
+        build:
+            context: .
+            dockerfile: dockerfile
+        restart: always
+        network_mode: bridge
+        ports:
+            - 80:80
+        depends_on: 
+            - db
+        links: 
+            - db
+        volumes:
+            - ./src/:/var/www/html/vendor/blackoutzz/framework/src/
+            - ./html/controllers/:/var/www/html/controllers/
+            - ./html/ui/:/var/www/html/ui/
+            - ./html/logs/apache/:/var/log/apache2/
+            - ./config/php/:/usr/local/etc/php/
+            - ./html/logs/sessions/:/tmp/php/sessions/
+        environment: 
+            - DATABASE_HOST=db
+            - DATABASE_NAME=app 
+            - DATABASE_PORT=3306
+            - DATABASE_USER=admin
+            - DATABASE_PASSWORD=3XukYjbnBHaP38uuSjphR
+            - ADMIN_USERNAME=admin
+            - ADMIN_PASSWORD=admin
+            - ADMIN_EMAIL=admin@localhost
+    db:
+        image: mariadb
+        restart: always
+        network_mode: bridge
+        environment:
+            - MYSQL_RANDOM_ROOT_PASSWORD=1
+            - MYSQL_USER=admin
+            - MYSQL_PASSWORD=3XukYjbnBHaP38uuSjphR
+            - MYSQL_DATABASE=app
