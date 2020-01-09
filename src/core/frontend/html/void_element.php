@@ -14,7 +14,7 @@ use core\common\str;
  * @Website https://Blackoutzz.me
  **/
 
-abstract class void_element
+abstract class void_element extends node
 {
     
     protected $tag;

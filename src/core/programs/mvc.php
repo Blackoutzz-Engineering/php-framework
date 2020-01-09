@@ -80,7 +80,7 @@ abstract class mvc extends program
             && isset($_SERVER["DATABASE_USER"])
             && isset($_SERVER["DATABASE_PASSWORD"]))
             {
-                sleep(20);
+                sleep(30);
                 if($this->configure_database()
                 && isset($_SERVER["ADMIN_USERNAME"]) 
                 && isset($_SERVER["ADMIN_PASSWORD"])
