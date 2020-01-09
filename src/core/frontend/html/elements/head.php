@@ -3,7 +3,7 @@ namespace core\frontend\html\elements;
 use core\frontend\html\element;
 
 /**
- * HTML Element : table
+ * HTML Element : head
  *
  * Based of the RE:DOM ideas
  *
@@ -14,12 +14,12 @@ use core\frontend\html\element;
  * @Website https://Blackoutzz.me
  **/
 
-class table extends element
+class head extends element
 {
 
     public function __construct($pattributes = array(), $pinner_html = array())
     {
-        $this->tag = "table";
+        $this->tag = "head";
         $this->inner_html = $pinner_html;
         $this->attributes = $pattributes;
     }

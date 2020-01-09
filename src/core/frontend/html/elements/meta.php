@@ -1,9 +1,9 @@
 <?php
 namespace core\frontend\html\elements;
-use core\frontend\html\element;
+use core\frontend\html\void_element;
 
 /**
- * HTML Element : table
+ * HTML Element : meta
  *
  * Based of the RE:DOM ideas
  *
@@ -14,12 +14,12 @@ use core\frontend\html\element;
  * @Website https://Blackoutzz.me
  **/
 
-class table extends element
+class meta extends void_element
 {
 
     public function __construct($pattributes = array(), $pinner_html = array())
     {
-        $this->tag = "table";
+        $this->tag = "meta";
         $this->inner_html = $pinner_html;
         $this->attributes = $pattributes;
     }

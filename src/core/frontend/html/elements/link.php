@@ -1,9 +1,9 @@
 <?php
 namespace core\frontend\html\elements;
-use core\frontend\html\element;
+use core\frontend\html\void_element;
 
 /**
- * HTML Element : table
+ * HTML Element : link
  *
  * Based of the RE:DOM ideas
  *
@@ -14,13 +14,12 @@ use core\frontend\html\element;
  * @Website https://Blackoutzz.me
  **/
 
-class table extends element
+class link extends void_element
 {
 
-    public function __construct($pattributes = array(), $pinner_html = array())
+    public function __construct($pattributes = array())
     {
-        $this->tag = "table";
-        $this->inner_html = $pinner_html;
+        $this->tag = "link";
         $this->attributes = $pattributes;
     }
 
