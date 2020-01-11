@@ -16,7 +16,6 @@ RUN rm composer.lock
 RUN chown -R www-data:www-data /var/www/html
 RUN chmod +X /run.sh
 RUN chmod 775 /run.sh
-RUN mkdir /tmp/
 RUN mkdir /tmp/php/
 RUN mkdir /tmp/php/sessions/
 RUN mkdir /tmp/php/uploads/

@@ -1,6 +1,6 @@
 {
     "require":
     {
-        "blackoutzz/framework":"dev-master"
+        "blackoutzz/framework":"dev-dev"
     }
 }
