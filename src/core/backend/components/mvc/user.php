@@ -46,15 +46,8 @@ class user extends dataset
     public function __construct()
     {
         $this->authenticated = false;
-        $this->state = new user_state(array("id"=>1,"name"=>"Disconnected"));
-        $this->group = new user_group(array("id"=>2,"name"=>"Guest"));
 		if(isset($_SESSION["user"])) $this->restore();
 	}
-
-    public function __toString()
-    {
-        return $this->name;
-    }
 
     public function get_user_agent()
     {
@@ -119,211 +112,12 @@ class user extends dataset
 
 	public function is_connected()
     {
-        try 
-        {
-            if($this->authenticated === true) return true;
-            if($this->authenticated === false) return false;
-            return false;
-        }
-        catch (exception $e)
-        {
-            return false;
-        }
+        return ($this->authenticated === true);
 	}
-
-    protected function restore()
-    {
-        try
-        {
-            if(isset($_SESSION["user"]["id"]))
-            {
-                $logged_user_data = model::get_user_by_id($_SESSION["user"]["id"]);
-                if(model::is_user($logged_user_data))
-                {
-                    $this->parse_data($logged_user_data);
-                    if(!isset($_SESSION["user"]) || !is_array($_SESSION["user"])) $_SESSION["user"] = array();
-                    if(isset($_SESSION["user"]["token"]))
-                    {
-                        $this->nonce = $_SESSION["user"]["token"];
-                    } else {
-                        $this->nonce = csrf::generate_token();
-				        $_SESSION["user"]["token"] = $this->nonce;
-			        }
-                    $this->authenticated = true;
-                    return true;
-                } else {
-                    throw new exception("Invalid or deleted user still logged in.");
-                }
-            } else {
-                throw new exception("No session detected");
-            }
-        }
-        catch (exception $e)
-        {
-            $this->authenticated = false;
-            return false;
-        }
-    }
-
-    public function do_action($paction)
-    {
-        $action = 0;
-        try
-        {
-            if(model::is_action($paction))
-            {
-                $action = $paction->get_id();
-            } 
-            elseif (is_string($paction))
-            {
-                $actions = model::get_actions_by_name($paction);
-                if(count($actions) >= 1)
-                {
-                    $action = $actions[0]->get_id();
-                }
-            } 
-            elseif (is_int($paction) || is_integer($paction))
-            {
-                $actions = model::get_actions_by_id($paction);
-                if(count($actions) >= 1)
-                {
-                    $action = $actions[0]->get_id();
-                }
-            }
-            $pdata = array(
-                "id"=>0,
-                "user"=>$this->id,
-                "ip"=>$this->ip,
-                "action"=>$action
-            );
-            $new_user_action = new user_action($pdata);
-            if($new_user_action->save())
-            {
-                return $new_user_action;
-            } else {
-                throw new exception("Failed to execute action as user");
-            }
-        }
-        catch (exception $e)
-        {
-            return new user_action(array("id"=>0,"user"=>$this->id,"ip"=>$this->ip,"action"=>$action));
-        }
-    }
-
-	public function can($ppermission)
-    {
-        try
-        {
-            $group_can = model::get_user_group_permission_by_user_group_and_permission($this->group,$ppermission);
-            if(model::is_user_group_permission($group_can))
-            {
-                if($group_can->get_granted()) return true;
-            }
-            $user_can = model::get_user_permission_by_user_and_permission($this->id,$ppermission);
-            if(model::is_user_permission($user_can))
-            {
-                if($user_can->get_granted()) return true;
-            }
-            throw new exception("{$this->username} cannot ".$ppermission);
-        }
-        catch (exception $e) 
-        {
-            return false;
-        }
-	}
-
-    public function has_access()
-    {
-        return true;
-        try
-        {
-            $controller_view = program::$routing->get_controller_view();
-            if($this->id >= 1)
-            {
-                if($user_access = model::get_user_controller_view_by_user_and_controller_view($this->id,$controller_view))
-                {
-                    if(model::is_user_controller_view($user_access))
-                    {
-                        if($user_access->get_granted()) return true;
-                    }
-                }
-            }
-            if($group_access = model::get_user_group_controller_view_by_user_group_and_controller_view($this->group,$controller_view))
-            {
-                if(model::is_user_group_controller_view($group_access))
-                {
-                    if($group_access->get_granted()) return true;
-                }
-            }
-            if(model::get_permission_controller_view_by_controller_view_user_and_group_and_granted($controller_view,$this->id,$this->group))
-            {
-                return true;
-            }
-
-            $controller_name = $this->get_controller_name();
-            $view_name = $this->get_view_name();
-            if($controller_name === "install" && $view_name === "index" && !program::is_configured()) return true;
-            throw new exception("Permission denied to access {$controller_name}/{$view_name}");
-        }
-        catch (exception $e)
-        {
-            return false;
-        }
-    }
-
-	public function login($username,$password)
-    {
-        try
-        {
-            if(isset($username) && isset($password))
-            {
-                $password = program::$cryptography->hash($password);
-                if($users_found = model::get_user_by_name($username))
-                {
-                    $new_user = $users_found;
-                    if($new_user->get_password() == $password)
-                    {
-                        $this->authenticated = true;
-                        $this->id = $new_user->get_id();
-                        $this->name = $new_user->get_name();
-                        $this->password = $new_user->get_password();
-                        $this->email = $new_user->get_email();
-                        $this->group = $new_user->get_group();
-                        $this->status = new user_state(array("id"=>2,"name"=>"Connected"));
-                        if(!isset($_SESSION["user"]) || !is_array($_SESSION["user"])) $_SESSION["user"] = array();
-                        $_SESSION["user"]["id"] = $this->id;
-                        $this->do_action("login");
-                        $new_user->save();
-                        return true;
-                    } else {
-                        throw new exception("Password not matching for {$username}");
-                    }
-                } else {
-                    throw new exception("{$username} not found as valid username.");
-                }
-            }
-            return false;
-        }
-        catch (exception $e) 
-        {
-            return false;
-        }
-
-	}
-
-    public function logoff()
-    {
-        $_SESSION = array();
-    }
 
     public function is_banned()
     {
-        if(model::is_user_state($this->state))
-        {
-            if($this->state->get_name() != "Banned")
-                return false;
-        }
-        return false;
+        return ($this->state->get_name() === "Banned");
     }
 
     public function get_name()
@@ -339,26 +133,6 @@ class user extends dataset
     public function get_password()
     {
         return $this->password;
-    }
-
-    public function get_permissions()
-    {
-        return model::get_user_permissions_by_user($this->id);
-    }
-
-    public function get_group_permissions()
-    {
-        return $this->group->get_permissions();
-    }
-
-    public function get_controller_views()
-    {
-        return model::get_user_controller_views_by_user($this->id);
-    }
-
-    public function get_group_controller_views()
-    {
-        return $this->group->get_controller_views();
     }
 
 	public function get_group()

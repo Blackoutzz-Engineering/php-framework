@@ -10,19 +10,4 @@ class root extends ajax
         return "Welcome";
     }
 
-    public function get_test()
-    {
-        return "poggers!";
-    }
-
-    public function get_notest()
-    {
-        echo "poggers!";
-    }
-
-    public function get_nottest()
-    {
-        return false;
-    }
-
 }

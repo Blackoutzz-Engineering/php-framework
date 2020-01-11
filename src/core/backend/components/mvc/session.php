@@ -51,7 +51,6 @@ class session extends dataset_array
     protected function restore()
     {
         $this->array = $_SESSION;
-        $this->restore_user();
     }
 
     public function reset()
@@ -68,14 +67,6 @@ class session extends dataset_array
     public function has_user()
     {
         return (isset($this->array["user"]));
-    }
-
-    protected function restore_user()
-    {
-        if(isset($_SESSION["user"]))
-        {
-            program::$users[0] = new user($_SESSION["user"]);
-        }
     }
 
     public function get_status() 

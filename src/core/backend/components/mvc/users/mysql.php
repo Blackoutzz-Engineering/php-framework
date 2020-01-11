@@ -33,22 +33,23 @@ class mysql extends user
         $this->authenticated = false;
         $this->state = new user_state(array("id"=>1,"name"=>"Disconnected"));
         $this->group = new user_group(array("id"=>2,"name"=>"Guest"));
-		if(isset($_SESSION["user"])) $this->restore();
+		if(isset($_SESSION["user"])) $this->__unserialize($_SESSION["user"]);
 	}
 
     public function do_action($paction)
     {
         $action = 0;
-        try{
-            if(model::is_action($paction)){
+        try
+        {
+            if($this->model()->is_action($paction)){
                 $action = $paction->get_id();
             } elseif (is_string($paction)){
-                $actions = model::get_actions_by_name($paction);
+                $actions = $this->model()->get_actions_by_name($paction);
                 if(count($actions) >= 1){
                     $action = $actions[0]->get_id();
                 }
             } elseif (is_int($paction) || is_integer($paction)){
-                $actions = model::get_actions_by_id($paction);
+                $actions = $this->model()->get_actions_by_id($paction);
                 if(count($actions) >= 1){
                     $action = $actions[0]->get_id();
                 }
@@ -77,13 +78,13 @@ class mysql extends user
     {
         try
         {
-            $group_can = model::get_user_group_permission_by_user_group_and_permission($this->group,$ppermission);
-            if(model::is_user_group_permission($group_can))
+            $group_can = $this->model()->get_user_group_permission_by_user_group_and_permission($this->group,$ppermission);
+            if($this->model()->is_user_group_permission($group_can))
             {
                 if($group_can->get_granted()) return true;
             }
-            $user_can = model::get_user_permission_by_user_and_permission($this->id,$ppermission);
-            if(model::is_user_permission($user_can))
+            $user_can = $this->model()->get_user_permission_by_user_and_permission($this->id,$ppermission);
+            if($this->model()->is_user_permission($user_can))
             {
                 if($user_can->get_granted()) return true;
             }
@@ -102,22 +103,22 @@ class mysql extends user
             $controller_view = program::$routing->get_controller_view();
             if($this->id >= 1)
             {
-                if($user_access = model::get_user_controller_view_by_user_and_controller_view($this->id,$controller_view))
+                if($user_access = $this->model()->get_user_controller_view_by_user_and_controller_view($this->id,$controller_view))
                 {
-                    if(model::is_user_controller_view($user_access))
+                    if($this->model()->is_user_controller_view($user_access))
                     {
                         if($user_access->get_granted()) return true;
                     }
                 }
             }
-            if($group_access = model::get_user_group_controller_view_by_user_group_and_controller_view($this->group,$controller_view))
+            if($group_access = $this->model()->get_user_group_controller_view_by_user_group_and_controller_view($this->group,$controller_view))
             {
-                if(model::is_user_group_controller_view($group_access))
+                if($this->model()->is_user_group_controller_view($group_access))
                 {
                     if($group_access->get_granted()) return true;
                 }
             }
-            if(model::get_permission_controller_view_by_controller_view_user_and_group_and_granted($controller_view,$this->id,$this->group))
+            if($this->model()->get_permission_controller_view_by_controller_view_user_and_group_and_granted($controller_view,$this->id,$this->group))
             {
                 return true;
             }
@@ -140,7 +141,7 @@ class mysql extends user
             if(isset($username) && isset($password))
             {
                 $password = program::$cryptography->hash($password);
-                if($users_found = model::get_user_by_name($username))
+                if($users_found = $this->model()->get_user_by_name($username))
                 {
                     $new_user = $users_found;
                     if($new_user->get_password() == $password)
@@ -173,21 +174,10 @@ class mysql extends user
 
 	}
 
-    public function is_banned()
-    {
-        if(model::is_user_state($this->state))
-        {
-            if($this->state->get_name() != "Banned")
-                return false;
-        }
-        return false;
-    }
-
-
     public function get_permissions()
     {
         if($this->id >= 1)
-            return model::get_user_permissions_by_user($this->id);
+            return $this->model()->get_user_permissions_by_user($this->id);
         else
             return new dataset_array();
     }
@@ -200,7 +190,7 @@ class mysql extends user
     public function get_controller_views()
     {
         if($this->id >= 1)
-            return model::get_user_controller_views_by_user($this->id);
+            return $this->model()->get_user_controller_views_by_user($this->id);
         else
             return new dataset_array();
     }
@@ -213,6 +203,18 @@ class mysql extends user
 	public function get_group()
     {
         return $this->group;
+    }
+
+    protected function model($pid = 0)
+    {
+        $id = intval($pid);
+        $this->database($id)->get_model();
+    }
+
+    protected function database($pid = 0)
+    {
+        $id = intval($pid);
+        return program::$databases->get_mysql_database_by_id($pid);
     }
 
 }

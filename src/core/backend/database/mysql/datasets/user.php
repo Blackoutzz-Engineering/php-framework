@@ -196,16 +196,6 @@ class user extends dataset
         //
     }
 
-    public function get_gravatar($style="")
-    {
-        if(isset($this->email) && $this->email != "")
-        {
-            $grav_url = "https://secure.gravatar.com/avatar/".md5($this->email).".png";
-            return"<img src='{$grav_url}' alt='{$this->username}' style='{$style}' />";
-        }
-        return "";
-    }
-
     public function get_last_update()
     {
         return $this->last_update;
