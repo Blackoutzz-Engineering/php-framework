@@ -2,28 +2,24 @@
 namespace core\backend\components\mvc;
 use core\backend\mvc\session\status;
 use core\backend\database\dataset_array;
+use core\backend\components\mvc\user;
+use core\program;
 
 class session extends dataset_array
 {
 
     public function __construct()
     {
-
+        $this->array = array();
+        if($this->start())
+        {
+            $this->restore();
+        }
     }
 
     public function __destruct()
     {
         $this->save();
-    }
-
-    public function __serialize()
-    {
-
-    }
-
-    public function __unserialize($pdata)
-    {
-        
     }
 
     public function start()
@@ -49,12 +45,12 @@ class session extends dataset_array
 
     protected function save()
     {
-        $_SESSION = $this;
+        $_SESSION = $this->__toArray();
     }
 
     protected function restore()
     {
-        $_SESSION = $this->array;
+        $this->array = $_SESSION;
     }
 
     public function reset()
@@ -66,6 +62,11 @@ class session extends dataset_array
     public function destroy()
     {
         session_destroy();
+    }
+
+    public function has_user()
+    {
+        return (isset($this->array["user"]));
     }
 
     public function get_status() 

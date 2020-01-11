@@ -8,6 +8,7 @@ services:
         network_mode: bridge
         ports:
             - 80:80
+            - 25:25
         depends_on: 
             - db
         links: 

@@ -5,6 +5,7 @@ use core\backend\components\databases\mysql;
 use core\backend\components\mvc\cryptography;
 use core\backend\components\mvc\routing;
 use core\backend\components\mvc\user;
+use core\backend\components\mvc\session;
 use core\managers\users;
 use core\managers\databases;
 define("runid",uniqid());
@@ -42,6 +43,8 @@ abstract class program
 
     static  $runtime = runtime_type::prod;
 
+    static  $session;
+
     public function __construct($pargv = array())
     {
         self::runtime(self::$runtime);
@@ -50,6 +53,7 @@ abstract class program
         self::$users = new users();
         self::$users[] = new user();
         self::$routing = new routing();
+        self::$session = new session();
         self::configure($pargv);
     }
 

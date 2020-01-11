@@ -11,7 +11,8 @@ use core\common\str;
 use core\backend\components\mvc\cryptography;
 use core\backend\database\mysql\datasets\user as mysql_user;
 use core\backend\components\mvc\routing;
-use core\backend\components\mvc\user;
+use core\backend\components\mvc\users\mysql as user;
+use core\backend\components\mvc\session;
 
 /**
  * MVC
@@ -34,15 +35,14 @@ abstract class mvc extends program
         {
             $this->runtime(1);
             $this->configure($pargv);
-            if($this->start_session())
+            self::$session = new session();
+            if(self::is_configured())
             {
-                if(self::is_configured())
-                {
-                    $instance = self::$routing->get_controller_instance();
-                    return $instance->initialize();
-                } 
-                die("Please rebuild the docker container");
-            }
+                $instance = self::$routing->get_controller_instance();
+                return $instance->initialize();
+            } 
+            die("Please rebuild the docker container");
+            
         }
         catch (exception $e)
         {
@@ -149,12 +149,7 @@ abstract class mvc extends program
         self::$users = new users();
         $password = self::$cryptography->hash($_SERVER["ADMIN_PASSWORD"]);
         $root = new mysql_user(array("name"=>$_SERVER["ADMIN_USERNAME"],"group"=>5,"password"=>$password,"email"=>$_SERVER["ADMIN_EMAIL"]));
-        if($root->save())
-        {
-            return true;
-        } else {
-            return false;
-        }
+        return ($root->save());
     }
 
 }
