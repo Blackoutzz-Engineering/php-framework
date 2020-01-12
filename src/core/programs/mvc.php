@@ -34,8 +34,8 @@ abstract class mvc extends program
         try
         {
             $this->runtime(1);
-            $this->configure($pargv);
             self::$session = new session();
+            $this->configure($pargv);
             if(self::is_configured())
             {
                 $instance = self::$routing->get_controller_instance();

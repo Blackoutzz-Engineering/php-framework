@@ -30,10 +30,9 @@ class mysql extends user
 
     public function __construct()
     {
-        $this->authenticated = false;
         $this->state = new user_state(array("id"=>1,"name"=>"Disconnected"));
         $this->group = new user_group(array("id"=>2,"name"=>"Guest"));
-		if(isset($_SESSION["user"])) $this->__unserialize($_SESSION["user"]);
+        parent::__construct();
 	}
 
     public function do_action($paction)
@@ -144,17 +143,15 @@ class mysql extends user
                 if($users_found = $this->model()->get_user_by_name($username))
                 {
                     $new_user = $users_found;
-                    if($new_user->get_password() == $password)
+                    if($new_user->get_password() === $password)
                     {
                         $this->authenticated = true;
                         $this->id = $new_user->get_id();
                         $this->name = $new_user->get_name();
                         $this->password = $new_user->get_password();
                         $this->email = $new_user->get_email();
-                        $this->group = $new_user->get_group();
-                        $this->status = new user_state(array("id"=>2,"name"=>"Connected"));
-                        if(!isset($_SESSION["user"]) || !is_array($_SESSION["user"])) $_SESSION["user"] = array();
-                        $_SESSION["user"]["id"] = $this->id;
+                        $this->set_group($new_user->get_group());
+                        $this->set_state(array("id"=>2,"name"=>"Connected"));
                         $this->do_action("login");
                         $new_user->save();
                         return true;
@@ -205,10 +202,35 @@ class mysql extends user
         return $this->group;
     }
 
+    public function set_group($pgroup)
+    {
+        $this->group = new user_group($pgroup);
+    }
+
+    public function get_state()
+    {
+        return $this->state;
+    }
+
+    public function set_state($pstate)
+    {
+        $this->state = new user_state($pstate);
+    }
+
+    public function is_authenticated()
+    {
+        return $this->authenticated;
+    }
+
+    public function get_authenticated()
+    {
+        return $this->authenticated;
+    }
+
     protected function model($pid = 0)
     {
         $id = intval($pid);
-        $this->database($id)->get_model();
+        return $this->database($id)->get_model();
     }
 
     protected function database($pid = 0)
