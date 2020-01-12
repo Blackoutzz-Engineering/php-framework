@@ -89,11 +89,19 @@ class routing
                     $parameter_id = 0;
                     if(isset($parameters[$parameter_id]) && $parameters[$parameter_id] != "")
                     {
-                        if($this->parse_managed_controller($parameters[$parameter_id])) $parameter_id++;
+                        if($this->parse_managed_controller($parameters[$parameter_id]))
+                        {
+                            if($this->controller->get_name() == trim($parameters[$parameter_id])) 
+                                $parameter_id++;
+                        }
                         elseif(!$this->on_default_controller()) return false;
                         if(isset($parameters[$parameter_id]) && $parameters[$parameter_id] != "")
                         {
-                            if($this->parse_managed_view($parameters[$parameter_id])) $parameter_id++;
+                            if($this->parse_managed_view($parameters[$parameter_id]))
+                            {
+                                if($this->view->get_name() == trim($parameters[$parameter_id])) 
+                                    $parameter_id++;
+                            }
                             elseif(!$this->on_default_view()) return false;
                             $this->parse_request_parameters($parameter_id);
                             return true;
@@ -125,11 +133,19 @@ class routing
                 $parameter_id = 0;
                 if(isset($parameters[$parameter_id]) && $parameters[$parameter_id] != "")
                 {
-                    if($this->parse_unmanaged_controller($parameters[$parameter_id])) $parameter_id++;
+                    if($this->parse_unmanaged_controller($parameters[$parameter_id]))
+                    {
+                        if($this->controller->get_name() == trim($parameters[$parameter_id])) 
+                            $parameter_id++;
+                    }
                     elseif(!$this->on_default_controller()) return false;
                     if(isset($parameters[$parameter_id]) && $parameters[$parameter_id] != "")
                     {
-                        if($this->parse_unmanaged_view($parameters[$parameter_id])) $parameter_id++;
+                        if($this->parse_unmanaged_view($parameters[$parameter_id]))
+                        {
+                            if($this->view->get_name() == trim($parameters[$parameter_id])) 
+                                $parameter_id++;
+                        }
                         elseif(!$this->on_default_view()) return false;
                         $this->parse_request_parameters($parameter_id);
                         return true;
@@ -286,6 +302,7 @@ class routing
         }
         catch (exception $e)
         {
+            
             if($e->get_code() != 0)
             {
                 return $this->on_request_error($e);
@@ -307,7 +324,8 @@ class routing
                     {
                         if($this->controller_view = $this->model->get_controller_view_by_controller_and_view($this->controller,$this->view))
                         {
-                            if(method_exists($this->parse_controller_namespace($this->controller->get_name()),$view_name))
+                            if((($this->get_controller_type() === "api" || $this->get_controller_type() === "ajax") && method_exists($this->parse_controller_namespace($this->controller->get_name()),$this->get_view_prefix().$view_name))
+                            || method_exists($this->parse_controller_namespace($this->controller->get_name()),$view_name))
                             {
                                 return true;
                             } else {
