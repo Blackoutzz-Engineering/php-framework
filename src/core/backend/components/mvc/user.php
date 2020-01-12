@@ -41,13 +41,20 @@ class user extends dataset
 
     protected $nonce;
 
-    protected $authenticated;
+    protected $authenticated = false;
 
     public function __construct()
     {
-        $this->authenticated = false;
-		if(isset($_SESSION["user"])) $this->restore();
+        if(isset(program::$session["user"])) $this->__unserialize(program::$session["user"]);
 	}
+
+    public function __destruct()
+    {
+        if($this->id === program::$users[0]->get_id())
+        {
+            program::$session["user"] = $this->__serialize(); 
+        }
+    }
 
     public function get_user_agent()
     {

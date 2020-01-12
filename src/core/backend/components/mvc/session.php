@@ -2,6 +2,7 @@
 namespace core\backend\components\mvc;
 use core\backend\mvc\session\status;
 use core\backend\database\dataset_array;
+use core\backend\database\dataset;
 use core\backend\components\mvc\user;
 use core\program;
 
@@ -19,7 +20,8 @@ class session extends dataset_array
 
     public function __destruct()
     {
-        $this->save();
+        if(session_status() == PHP_SESSION_ACTIVE)
+            $this->save();
     }
 
     public function start()
@@ -35,6 +37,23 @@ class session extends dataset_array
             default:
                 return (session_status() == PHP_SESSION_ACTIVE);
         }
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        if (is_null($offset))
+        {
+            if($value instanceof dataset_array || $value instanceof dataset)
+                $this->array[] = $value->__serialize();
+            else
+                $this->array[] = $value;
+        } else {
+            if($value instanceof dataset_array || $value instanceof dataset)
+                $this->array[$offset] = $value->__serialize();
+            else
+                $this->array[$offset] = $value;
+        }
+        $this->save();
     }
 
     protected function set_default_value()

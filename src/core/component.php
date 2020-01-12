@@ -19,6 +19,11 @@ use core\backend\components\database;
 abstract class component
 {
 
+    protected function get_user()
+    {
+        return program::$users[0];
+    }
+
     protected function get_users()
     {
         return program::$users;
