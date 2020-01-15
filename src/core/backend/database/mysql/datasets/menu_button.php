@@ -12,6 +12,11 @@ class menu_button extends dataset
 
     protected $category = NULL;
 
+    public function __toString()
+    {
+        return $this->name;
+    }
+
     public function save($pid = 0)
     {
         if($this->exist())

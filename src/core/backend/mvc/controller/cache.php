@@ -1,5 +1,5 @@
 <?php
-namespace core\backend\components\mvc;
+namespace core\backend\mvc\controller;
 use core\component;
 use core\backend\components\mvc\user;
 use core\backend\components\filesystem\file;

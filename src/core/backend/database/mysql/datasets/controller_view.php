@@ -70,10 +70,8 @@ class controller_view extends dataset
         {
             if($controller != "root") return "{$controller}/{$view}";
             else return "{$view}";
-        } else {
-            return "install/index";
         }
-
+        return "$controller/$view";
     }
 
 }

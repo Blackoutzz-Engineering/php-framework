@@ -12,6 +12,7 @@ use core\backend\database\mysql\datasets\controller;
 use core\backend\database\mysql\datasets\view;
 use core\backend\database\mysql\datasets\controller_view;
 use core\common\exception;
+use core\backend\mvc\routing\mode;
 
 /**
  * Routing for MVC
@@ -38,8 +39,11 @@ class routing
 
     protected $parameters;
 
-    public function __construct()
+    protected $mode;
+
+    public function __construct($pmode = mode::unmanaged)
     {
+        $this->mode = $pmode;
         $this->request = new request();
         $this->parameters = array();
         $folder = new folder("controllers");
@@ -56,9 +60,19 @@ class routing
         $this->parse_request();
     }
 
+    public function is_managed()
+    {
+        return ($this->mode === mode::managed);
+    }
+
+    public function is_unmanaged()
+    {
+        return ($this->mode === mode::unmanaged);
+    }
+
     protected function parse_request()
     {
-        if(isset($this->model) && $this->model->is_connected())
+        if($this->is_managed())
             return $this->parse_managed_request();
         else 
             return $this->parse_unmanaged_request();
@@ -145,6 +159,7 @@ class routing
                         {
                             if($this->view->get_name() == trim($parameters[$parameter_id])) 
                                 $parameter_id++;
+                            $this->controller_view = new controller_view(["view"=>$this->view,"controller"=>$this->controller]);
                         }
                         elseif(!$this->on_default_view()) return false;
                         $this->parse_request_parameters($parameter_id);

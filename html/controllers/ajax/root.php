@@ -16,7 +16,7 @@ class root extends ajax
         {
             $username = $_REQUEST["email"];
             $password = $_REQUEST["password"];
-            return $this->get_user()->login($username,$password);
+            return $this->user->login($username,$password);
         }
         return false;
     }

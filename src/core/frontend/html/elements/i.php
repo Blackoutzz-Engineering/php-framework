@@ -1,9 +1,9 @@
 <?php
 namespace core\frontend\html\elements;
-use core\frontend\html\void_element;
+use core\frontend\html\element;
 
 /**
- * HTML Element : img
+ * HTML Element : i
  *
  * Based of the RE:DOM ideas
  *
@@ -14,12 +14,13 @@ use core\frontend\html\void_element;
  * @Website https://Blackoutzz.me
  **/
 
-class img extends void_element
+class i extends element
 {
 
-    public function __construct($pattributes = array())
+    public function __construct($pattributes = array(), $pinner_html = array())
     {
-        $this->tag = "img";
+        $this->tag = "i";
+        $this->inner_html = $pinner_html;
         $this->attributes = $pattributes;
     }
 

@@ -21,8 +21,9 @@ class admin extends page
 
     protected function on_initialize()
     {
-        $this->require_login();
+        $this->require_authentication();
         $this->require_group(array("Admin","Moderator"));
+        $this->send(["buttons"=>$this->databases->get_mysql_database_by_id()->get_model()->get_menu_buttons_by_user_and_group_and_granted($this->user->get_id(),$this->user->get_group())],"menu");
     }
 
     public function index()
@@ -37,14 +38,14 @@ class admin extends page
 
     public function groups()
     {
-        $users = $this->get_databases()->get_mysql_database_by_id()->get_model();
+        $users = $this->databases->get_mysql_database_by_id()->get_model();
         $this->send($users->get_user_groups(),"groups");
     }
 
     public function group($pname)
     {
         if($pname === false) $this->redirect("/admin/groups");
-        $users = $this->get_databases()->get_mysql_database_by_id()->get_model();
+        $users = $this->databases->get_mysql_database_by_id()->get_model();
         if(regex::is_numeric($pname)) {
             $groups = $users->get_user_groups_by_id($pname);
         } else if(regex::is_slug($pname)){
@@ -64,14 +65,24 @@ class admin extends page
 
     public function permissions()
     {
-        $this->send($this->get_databases()->get_mysql_database_by_id()->get_model()->get_permissions(),"permissions");
+        $this->send($this->databases->get_mysql_database_by_id()->get_model()->get_permissions(),"permissions");
+    }
+
+    public function permission()
+    {
+
     }
 
     public function users()
     {
-        $users_model = $this->get_databases()->get_mysql_database_by_id()->get_model();
+        $users_model = $this->databases->get_mysql_database_by_id()->get_model();
         $this->send($users_model->get_users(),"users");
         $this->send($users_model->get_user_groups(),"groups");
+    }
+
+    public function user()
+    {
+        
     }
 
     public function system()
@@ -80,15 +91,15 @@ class admin extends page
 
     public function pages()
     {
-        $this->send($this->get_databases()->get_mysql_database_by_id()->get_model()->get_controllers(),"controllers");
+        $this->send($this->databases->get_mysql_database_by_id()->get_model()->get_controllers(),"controllers");
     }
 
     public function database()
     {
         if(isset($_REQUEST["sql"])){
-            $this->send($this->get_databases()->get_mysql_database_by_id()->get_connection()->get_select_query($_REQUEST["sql"]),"data");
+            $this->send($this->databases->get_mysql_database_by_id()->get_connection()->get_select_query($_REQUEST["sql"]),"data");
         } else {
-            $this->send($this->get_databases()->get_mysql_database_by_id()->get_connection()->get_select_query("show tables"),"data");
+            $this->send($this->databases->get_mysql_database_by_id()->get_connection()->get_select_query("show tables"),"data");
         }
     }
 

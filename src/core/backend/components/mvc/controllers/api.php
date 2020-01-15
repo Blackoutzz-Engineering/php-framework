@@ -7,6 +7,7 @@ use core\backend\database\mysql\datasets\user;
 use core\backend\database\dataset;
 use core\backend\database\dataset_array;
 
+
 /**
  * API Controller.
  *
@@ -22,6 +23,23 @@ class api extends rest
 
     protected $connected = false;
     
+    public function __construct($preference = 'core')
+    {
+        parent::__construct($preference);
+        if(isset($_REQUEST["key"]))
+        {
+            $api_key = $_REQUEST["key"];
+            $user_option = model::get_user_option_by_option_and_value("api-key",$api_key);
+            if(model::is_user_option($user_option))
+            {
+                if($user_option->get_value() === $api_key)
+                {
+                    return $user_option->get_user();
+                }
+            }
+        }
+    }
+
     public function initialize()
     {
         try
@@ -193,26 +211,29 @@ class api extends rest
         die(json_encode(array("code"=>403,"message"=>"Permission denied to access the API.")));
     }
 
-    protected function is_login()
+    public function is_authenticated($pid = 0)
     {
-        return $this->connected;
-    }
-
-    protected function get_user()
-    {
-        if(isset($_REQUEST["key"]))
+        $id = intval($pid);
+        try
         {
-            $api_key = $_REQUEST["key"];
-            $user_option = model::get_user_option_by_option_and_value("api-key",$api_key);
-            if(model::is_user_option($user_option))
+            if(program::$users[$id] instanceof user)
             {
-                if($user_option->get_value() === $api_key)
+                if(isset($_REQUEST["user-token"]))
                 {
-                    return $user_option->get_user();
+                    if(program::$users[$id]->is_authenticated() && (program::$users[$id]->get_nonce() === $_REQUEST["user-token"]))
+                    {
+                        return true;
+                    }
+                    throw new exception("Bad CSRF token");
                 }
+                throw new exception("Missing CSRF token");
             }
+            throw new exception("User is required to authenticate");
         }
-        return new user(array("id"=>0,"name"=>"Visitor","user_group"=>2));
+        catch (exception $e)
+        {
+            return false;
+        }
     }
 
     public function redirect($ppath = "")
@@ -221,9 +242,9 @@ class api extends rest
         {
             if($ppath != "")
             {
-                if(isset($_REQUEST["key"]) && isset($_REQUEST["output"]) && isset($_REQUEST["depth"]) && $this->is_login()) header("Location: /api/{$ppath}?key=".urlencode($_REQUEST["key"])."&output=".urlencode($_REQUEST["output"])."&depth");
-                elseif(isset($_REQUEST["key"]) && isset($_REQUEST["output"]) && $this->is_login()) header("Location: /api/{$ppath}?key=".urlencode($_REQUEST["key"])."&output=".urlencode($_REQUEST["output"]));
-                elseif(isset($_REQUEST["key"]) && $this->is_login()) header("Location: /api/{$ppath}?key=".urlencode($_REQUEST["key"]));
+                if(isset($_REQUEST["key"]) && isset($_REQUEST["output"]) && isset($_REQUEST["depth"]) && $this->is_authenticated()) header("Location: /api/{$ppath}?key=".urlencode($_REQUEST["key"])."&output=".urlencode($_REQUEST["output"])."&depth");
+                elseif(isset($_REQUEST["key"]) && isset($_REQUEST["output"]) && $this->is_authenticated()) header("Location: /api/{$ppath}?key=".urlencode($_REQUEST["key"])."&output=".urlencode($_REQUEST["output"]));
+                elseif(isset($_REQUEST["key"]) && $this->is_authenticated()) header("Location: /api/{$ppath}?key=".urlencode($_REQUEST["key"]));
                 else header("Location: /api/{$ppath}");
             }
             die();

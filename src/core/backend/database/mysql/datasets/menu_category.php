@@ -7,6 +7,11 @@ class menu_category extends dataset
 
     protected $name = "";
 
+    public function __toString()
+    {
+        return $this->name;
+    }
+
     public function save($pid = 0)
     {
         if($this->exist())

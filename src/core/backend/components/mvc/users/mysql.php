@@ -35,6 +35,13 @@ class mysql extends user
         parent::__construct();
 	}
 
+    public function __unserialize($pdata)
+    {
+        parent::__unserialize($pdata);
+        $this->set_group($this->group);
+        $this->set_state($this->state);
+    }
+
     public function do_action($paction)
     {
         $action = 0;
@@ -122,8 +129,8 @@ class mysql extends user
                 return true;
             }
 
-            $controller_name = $this->get_controller_name();
-            $view_name = $this->get_view_name();
+            $controller_name = program::$routing->get_controller()->get_name();
+            $view_name = program::$routing->get_view()->get_name();
             if($controller_name === "install" && $view_name === "index" && !program::is_configured()) return true;
             throw new exception("Permission denied to access {$controller_name}/{$view_name}");
         }

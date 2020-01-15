@@ -50,6 +50,7 @@ class log
             $log_data["".runid.str::get_hex($id).""] = array();
             $log_data[runid.str::get_hex($id)][] = $pdata;
         }
+        
         if(file_put_contents($log,json_encode($log_data)) === false)
         {
             error_log("log::save -> Permission denied to create log's file.");

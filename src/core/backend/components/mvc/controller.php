@@ -6,7 +6,9 @@ use core\backend\database\mysql\model;
 use core\component;
 use core\common\str;
 use core\common\exception;
-use core\backend\components\mvc\cache;
+use core\backend\mvc\controller\cache;
+use core\backend\mvc\controller\routing;
+use core\backend\mvc\controller\databases;
 use core\frontend\components\mvc\controller_view;
 
 /**
@@ -21,54 +23,42 @@ use core\frontend\components\mvc\controller_view;
  * @website https://Blackoutzz.me
  **/
 
-abstract class controller extends component
+abstract class controller
 {
 
     protected $reference;
 
     protected $view_data = array();
 
+    protected $user;
+
+    protected $databases;
+
+    protected $routing;
+
     protected $cache;
 
     public function __construct($preference = "core")
     {
         $this->reference = $preference;
+        $this->user = program::$users[0];
+        $this->databases = new databases();
+        $this->routing = new routing();
         $this->cache = new cache($preference);
         $this->on_initialize();
     }
 
-    protected function get_databases()
-    {
-        return program::$databases;
-    }
-
     public function __toString()
     {
-        return array_pop(explode('\\',__CLASS__));
-    }
-
-    public function has_access()
-    {
-        try
-        {
-            if(isset(program::$user) && program::$user instanceof user)
-            {
-                if(program::$user->has_access()) return true;
-                throw new exception("Access denied to access view");
-            }
-            return true;
-        } catch (exception $e)
-        {
-            $this->on_access_failed();
-            return false;
-        }
+        $classname = get_class($this);
+        return array_pop(explode('\\',$classname));
     }
 
     protected function has_view()
     {
         try
         {
-            $view = trim(strtolower(str_replace("-","_",$this->get_view_name())));
+            $view = trim(strtolower(str_replace("-","_",$this->routing->get_view_name())));
             if(preg_match('~^([A-z]+[A-z-_]*[A-z]+)$~im',$view))
             {
                 if(method_exists('core\\backend\\components\\mvc\\controller',$view)) 
@@ -94,19 +84,21 @@ abstract class controller extends component
         try
         {
             $no_parameter = 0;
-            $count_view_parameters = count($this->get_parameters());
-            $count_needed_parameters = $this->count_view_parameters();
-            $view_parameters = $this->get_parameters();
+            $view_parameters = $this->routing->get_parameters();
+            $count_view_parameters = count($view_parameters);
+            $view_name = $this->routing->get_view_name();
+            $ref = new \ReflectionMethod($this,str_replace(["-"," "],"_",$view_name));
+            $count_needed_parameters = count($ref->getParameters());
             //If No parameters are needed they will be ignored
             if($count_view_parameters === $no_parameter
             && $count_needed_parameters === $no_parameter)
             {
-                return call_user_func(array($this,str_replace("-","_",$this->get_view_name())));
+                return call_user_func(array($this,str_replace(["-"," "],"_",$view_name)));
             }
             //If Parameters match perfectly
             if($count_view_parameters === $count_needed_parameters)
             {
-                return call_user_func_array(array($this,str_replace("-","_",$this->get_view_name())),$view_parameters);
+                return call_user_func_array(array($this,str_replace(["-"," "],"_",$view_name)),$view_parameters);
             }
             //View will be loaded with the first parameter provided
             if($count_view_parameters > $count_needed_parameters)
@@ -117,7 +109,7 @@ abstract class controller extends component
                     $params[] = $view_parameters[$i];
 
                 }
-                return call_user_func_array(array($this,str_replace("-","_",$this->get_view_name())),$params);
+                return call_user_func_array(array($this,str_replace(["-"," "],"_",$view_name)),$params);
 
             }
             //View will be loaded with the first parameter provided and add false to the rest
@@ -132,7 +124,7 @@ abstract class controller extends component
                 {
                     $params[] = false;
                 }
-                return call_user_func_array(array($this,str_replace("-","_",$this->get_view_name())),$params);
+                return call_user_func_array(array($this,str_replace(["-"," "],"_",$view_name)),$params);
             }
             //Missing or Invalid Parameters
             throw new exception("Invalid parameters.");
@@ -148,21 +140,26 @@ abstract class controller extends component
         return new controller_view($this->reference,$this->cache,$this->view_data);
     }
 
-    public function initialize()
+    protected function has_access($pid = 0)
     {
-        return false;
-    }
-
-    protected function require_login()
-    {
+        $id = intval($pid);
         try
         {
-            if($this->is_login()) return true;
-            throw new exception("Login required to access ".$this->get_controller_view());
+            if($this->routing->is_managed())
+            {
+                if(isset(program::$users) && program::$users[$id] instanceof user)
+                {
+                    if(program::$users[$id]->has_access()) return true;
+                    throw new exception("Access denied to access view");
+                }
+                throw new exception("User doesn't have access");
+            } else {
+                return true;
+            }
+            
         } 
-        catch(exception $e)
+        catch (exception $e)
         {
-            $this->on_login_requirement_failed();
             return false;
         }
     }
@@ -171,19 +168,18 @@ abstract class controller extends component
     {
         try
         {
-            $user = $this->get_user();
-            if($user instanceof user)
+            if(isset($this->user))
             {
                 if(is_array($ppermission))
                 {
                     foreach($ppermission as $permission)
                     {
-                        if($user->can($permission)) return true;
+                        if($this->user->can($permission)) return true;
                     }
-                    throw new exception("Required permission missing for {$user}");
+                    throw new exception("Required permission missing");
                 } else {
-                    if($user->can($ppermission)) return true;
-                    throw new exception("Permission Required missing for {$user}");
+                    if($this->user->can($ppermission)) return true;
+                    throw new exception("Permission Required missing");
                 }
             }
             throw new exception("No permission can be used without users.");
@@ -199,20 +195,19 @@ abstract class controller extends component
     {
         try
         {
-            $user = $this->get_user();
-            if($user instanceof user)
+            if(isset($this->user))
             {
                 if(is_array($ppermission))
                 {
                     foreach($ppermission as $permission)
                     {
-                        if($user->can($permission)) continue;
-                        throw new exception("Required permission missing for {$user}");
+                        if($this->user->can($permission)) continue;
+                        throw new exception("Required permission missing");
                     }
                     return true;
                 } else {
-                    if($user->can($ppermission)) return true;
-                    throw new exception("Permission Required missing for {$user}");
+                    if($this->user->can($ppermission)) return true;
+                    throw new exception("Permission Required missing");
                 }
             }
             throw new exception("No permissions can be used without users.");
@@ -224,35 +219,51 @@ abstract class controller extends component
         }
     }
 
+    protected function require_authentication()
+    {
+        try
+        {
+            if($this->user->is_authenticated()) return true;
+            throw new exception("Authentication is required to access this page");
+        } 
+        catch(exception $e)
+        {
+            $this->on_login_requirement_failed();
+            return false;
+        }
+    }
+
     protected function require_group($pgroup)
     {
         if(is_array($pgroup))
         {
             foreach($pgroup as $group)
             {
-                if(model::is_user_group($group))
+                //if($this->get_databases()->get_mysql_database_by_id()->get_model()->is_user_group($group))
+                //{
+                //    if($this->get_user()->get_group()->get_name() === $group->get_name()) return true;
+                //} 
+                if(is_string($group))
                 {
-                    if($this->get_user()->get_group()->get_name() === $group->get_name()) return true;
-                } elseif (is_string($group))
+                    if($this->user->get_group()->get_name() === $group) return true;
+                } 
+                elseif(is_numeric($group) || is_integer($group))
                 {
-                    if($this->get_user()->get_group()->get_name() === $group) return true;
-                } elseif (is_numeric($group) || is_integer($group))
-                {
-                    if($this->get_user()->get_group()->get_id() === $group) return true;
+                    if($this->user->get_group()->get_id() === $group) return true;
                 }
             }
         } 
-        elseif(model::is_user_group($pgroup)) 
+        //elseif($this->get_databases()->get_mysql_database_by_id()->is_user_group($pgroup)) 
+        //{
+        ///    if($this->get_user()->get_group()->get_name() === $pgroup->get_name()) return true;
+        //} 
+        if(is_string($pgroup))
         {
-            if($this->get_user()->get_group()->get_name() === $pgroup->get_name()) return true;
-        } 
-        elseif(is_string($pgroup))
-        {
-            if($this->get_user()->get_group()->get_name() === $pgroup) return true;
+            if($this->user->get_group()->get_name() === $pgroup) return true;
         } 
         elseif(is_numeric($pgroup) || is_integer($pgroup))
         {
-            if($this->get_user()->get_group()->get_id() === $pgroup) return true;
+            if($this->user->get_group()->get_id() === $pgroup) return true;
         }
         $this->on_group_requirement_failed();
         return false;
@@ -304,40 +315,7 @@ abstract class controller extends component
         }
     }
 
-    protected function get_name()
-    {
-        return program::$routing->get_controller()->get_name();
-    }
-
-    protected function get_id()
-    {
-        return program::$routing->get_controller()->get_id();
-    }
-
-    protected function count_view_parameters()
-    {
-        try
-        {
-            if($this->has_view())
-            {
-                $ref = new \ReflectionMethod($this,str_replace("-","_",$this->get_view_name()));
-                return count($ref->getParameters());
-            } else {
-                throw new exception("Impossible to find controller so no parameters accepted.");
-            }
-        }
-        catch (exception $e)
-        {
-            return 0;
-        }
-    }
-
-    protected function get_parameters()
-    {
-        return program::$routing->get_parameters();
-    }
-
-    public function redirect($ppath = "")
+    protected function redirect($ppath = "")
     {
         try 
         {
@@ -362,7 +340,8 @@ abstract class controller extends component
                 }
                 if(method_exists($this,"index"))
                 {
-                    if($this->has_access()){
+                    if($this->has_access())
+                    {
                         if($this->controller_name != "root")
                         {
                             header("Location: /{$this->controller_name}/");
@@ -376,7 +355,6 @@ abstract class controller extends component
                 header("Location: /");
                 program::end(307);
             }
-
         } 
         catch (exception $e)
         {
@@ -385,23 +363,11 @@ abstract class controller extends component
         }
     }
 
-    protected function is_login()
+    public function initialize()
     {
-        try
-        {
-            if(program::$users[0] instanceof user)
-            {
-                return program::$users[0]->is_connected();
-            }
-            throw new exception("User is required to login");
-        }
-        catch (exception $e)
-        {
-            return $this->redirect("/");
-        }
+        return false;
     }
 
-    //Event Related
     protected function on_initialize()
     {
         //Override this to execute custom code.
@@ -441,5 +407,6 @@ abstract class controller extends component
         //Override this to execute custom code.
         $this->redirect("/");
     }
+
 
 }

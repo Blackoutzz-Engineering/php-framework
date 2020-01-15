@@ -41,7 +41,7 @@ abstract class program
 
     static  $plugins = array();
 
-    static  $runtime = runtime_type::prod;
+    static  $runtime = runtime_type::dev;
 
     static  $session;
 

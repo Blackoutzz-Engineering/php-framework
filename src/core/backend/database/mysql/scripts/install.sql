@@ -66,6 +66,7 @@ INSERT INTO `plugins` values (1,"demo plugin","demo","ALPHA-DEMO",0);
 INSERT INTO `actions` values (1,"Login");
 INSERT INTO `actions` values (2,"Logout"); 
 INSERT INTO `actions` values (3,"Forgot Password");
+INSERT INTO `actions` values (4,"Register");
 
 INSERT INTO `user_states` values (1,"Disconnected"); 
 INSERT INTO `user_states` values (2,"Connected"); 
@@ -78,11 +79,8 @@ INSERT INTO `user_groups` values (5,"Admin");
 
 INSERT INTO `permissions` values (1,"Root","Full Permissions");
 INSERT INTO `permissions` values (2,"Website Access","This is the basic permission needed to access the website.");
-
 INSERT INTO `permissions` values (3,"User Access","This is the user access point to be able to access the dashboard.");
-
 INSERT INTO `permissions` values (4,"Moderator Access","Moderator have access to a part of the admin panel without having full access to admin panel.");
-
 INSERT INTO `permissions` values (5,"Admin Access","Full control over the website.");
 
 INSERT INTO `menu_categories` values (1,"Menu");

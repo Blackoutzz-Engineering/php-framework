@@ -37,13 +37,39 @@ abstract class element extends node
         {
             foreach($this->inner_html as $element)
             {
-                $html .= "\t".$element."\n";
+                if(is_array($element))
+                {
+                    $html .= $this->get_inner_html_array($element);
+                } 
+                else
+                {
+                    $html .= $element."\n";
+                }
+                
             }
             return $html;
+        } else {
+            $html .= $this->inner_html."\n";
         }
-        if(is_string($this->inner_html))
+        return $html;
+    }
+
+    protected function get_inner_html_array($parray)
+    {
+        $html = "\n";
+        if(is_array($parray))
         {
-            $html .= "\t".$this->inner_html."\n";
+            foreach($parray as $element)
+            {
+                if(is_array($element))
+                {
+                    $html .= $this->get_inner_html_array($element);
+                } 
+                else
+                {
+                    $html .= $element."\n";
+                }
+            }
         }
         return $html;
     }

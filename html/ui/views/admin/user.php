@@ -1,5 +1,5 @@
 <div class="card">
     <div class="card-body">
-        Dashboard
+        Welcome to user
     </div>
 </div>

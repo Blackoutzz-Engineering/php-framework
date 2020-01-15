@@ -31,8 +31,7 @@
                         <sup>@Blackoutzz</sup>
                     </div>
                 </a>
-                <hr class="sidebar-divider my-0" />
-                <br/>
+                <?php echo $this->get_widget("menu",$this->get_data("menu")); ?>
                 <div class="text-center d-none d-md-inline" >
                     <button id="sidebarToggle" class="rounded-circle border-0"></button>
                 </div>

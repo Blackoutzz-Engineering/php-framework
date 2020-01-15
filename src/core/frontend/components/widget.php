@@ -1,6 +1,7 @@
 <?php
 namespace core\frontend\components;
 use core\backend\database\dataset;
+use core\frontend\html\node;
 
 /**
  * @Version 1.0
@@ -13,9 +14,57 @@ use core\backend\database\dataset;
 class widget extends dataset
 {
 
+    protected function get_html($phtml)
+    {
+        $html = "\n";
+        if(is_array($phtml))
+        {
+            foreach($phtml as $element)
+            {
+                if(is_array($element))
+                {
+                    $html .= $this->get_html_array($element);
+                } 
+                else
+                {
+                    $html .= $element."\n";
+                }
+                
+            }
+            return $html;
+        } else {
+            $html .= $this->inner_html."\n";
+        }
+        return $html;
+    }
+
+    protected function get_html_array($parray)
+    {
+        $html = "\n";
+        if(is_array($parray))
+        {
+            foreach($parray as $element)
+            {
+                if(is_array($element))
+                {
+                    $html .= $this->get_html_array($element);
+                } 
+                else
+                {
+                    $html .= $element."\n";
+                }
+            }
+        }
+        return $html;
+    }
+
     public function __toString()
     {
-        return (string) $this->__toHtml();
+        $html = $this->__toHtml();
+        if($html instanceof node)
+            return (string) $html;
+        else
+            return $this->get_html($html);
     }
 
     public function __toHtml()

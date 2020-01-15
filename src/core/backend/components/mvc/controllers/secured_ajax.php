@@ -23,7 +23,7 @@ class secured_ajax extends controller
     public function initialize()
     {
         header("Content-Type: text/json");
-        if($this->has_access() && $this->is_login())
+        if($this->has_access() && $this->is_authenticated())
         {
             if($this->has_view())
             {
@@ -46,9 +46,9 @@ class secured_ajax extends controller
         return new controller_view($this->reference,$this->view_data);
     }
 
-    protected function is_login()
+    protected function is_authenticated()()
     {
-        $is_login = parent::is_login();
+        $is_login = parent::is_authenticated();
         if(isset($_REQUEST["user-token"]))
         {
             if($is_login && ($_SESSION["user"]["token"] === $_REQUEST["user-token"])) return true;

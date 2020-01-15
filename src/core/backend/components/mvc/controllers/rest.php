@@ -11,19 +11,21 @@ class rest extends controller
         try
         {
             $no_parameter = 0;
-            $count_view_parameters = count($this->get_parameters());
-            $count_needed_parameters = $this->count_view_parameters();
-            $view_parameters = $this->get_parameters();
+            $view_name = $this->get_view_prefix().str_replace("-","_",$this->routing->get_view_name());
+            $ref = new \ReflectionMethod($this,$view_name);
+            $view_parameters = $this->routing->get_parameters();
+            $count_view_parameters = count($view_parameters);
+            $count_needed_parameters = count($ref->getParameters());
             //If No parameters are needed they will be ignored
             if($count_view_parameters === $no_parameter
             && $count_needed_parameters === $no_parameter)
             {
-                return call_user_func(array($this,$this->get_view_prefix().str_replace("-","_",$this->get_view_name())));
+                return call_user_func(array($this,$view_name));
             }
             //If Parameters match perfectly
             if($count_view_parameters === $count_needed_parameters)
             {
-                return call_user_func_array(array($this,$this->get_view_prefix().str_replace("-","_",$this->get_view_name())),$view_parameters);
+                return call_user_func_array(array($this,$view_name),$view_parameters);
             }
             //View will be loaded with the first parameter provided
             if($count_view_parameters > $count_needed_parameters)
@@ -34,7 +36,7 @@ class rest extends controller
                     $params[] = $view_parameters[$i];
 
                 }
-                return call_user_func_array(array($this,$this->get_view_prefix().str_replace("-","_",$this->get_view_name())),$params);
+                return call_user_func_array(array($this,$view_name),$params);
 
             }
             //View will be loaded with the first parameter provided and add false to the rest
@@ -49,7 +51,7 @@ class rest extends controller
                 {
                     $params[] = false;
                 }
-                return call_user_func_array(array($this,$this->get_view_prefix().str_replace("-","_",$this->get_view_name())),$params);
+                return call_user_func_array(array($this,$view_name),$params);
             }
             //Missing or Invalid Parameters
             throw new exception("Invalid parameters.");
@@ -60,30 +62,12 @@ class rest extends controller
         }
     }
 
-    protected function count_view_parameters()
-    {
-        try
-        {
-            if($this->has_view())
-            {
-                $ref = new \ReflectionMethod($this,$this->get_view_prefix().str_replace("-","_",$this->get_view_name()));
-                return count($ref->getParameters());
-            } else {
-                throw new exception("Impossible to find controller so no parameters accepted.");
-            }
-        }
-        catch (exception $e)
-        {
-            return 0;
-        }
-    }
-
     protected function has_view()
     {
         try
         {
             $prefix = $this->get_view_prefix();
-            $view = $prefix.trim(strtolower(str_replace("-","_",$this->get_view_name())));
+            $view = $prefix.trim(strtolower(str_replace("-","_",$this->routing->get_view_name())));
             if(preg_match('~^([A-z]+[A-z-_]*[A-z]+)$~im',$view))
             {
                 if(method_exists('core\\backend\\components\\mvc\\controllers\\api',$view)) 
@@ -104,7 +88,7 @@ class rest extends controller
         }
     }
 
-    protected function require_login()
+    protected function require_authentication()
     {
         try
         {

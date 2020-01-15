@@ -20,8 +20,7 @@ class page extends controller
         if($this->has_access() && $this->has_view())
         {
             $this->prepare_view();
-            $view = $this->create_view();
-            $view->load_layout();
+            $this->create_view()->load_layout();
             return true;
         } else {
             return false;

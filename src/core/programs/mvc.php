@@ -104,7 +104,7 @@ abstract class mvc extends program
             self::$cryptography = new cryptography(["salt"=>$pargv["salt"],"algo"=>$pargv["algo"]]);
             self::$users = new users();
             self::$users[] = new user();
-            self::$routing = new routing();
+            self::$routing = new routing(1);
             return true;
         }
     }

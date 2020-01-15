@@ -1,8 +1,8 @@
 <?php
 namespace core\backend\components\mvc\controllers;
 use core\backend\components\mvc\controllers\rest;
-use core\backend\mvc\ajax\response;
-use core\backend\mvc\ajax\response_code;
+use core\backend\mvc\controller\ajax\response;
+use core\backend\mvc\controller\ajax\response_code;
 use core\common\exception;
 use core\common\conversions\json;
 use core\program;
@@ -19,6 +19,7 @@ use core\program;
 
 class ajax extends rest
 {
+
 
     public function initialize()
     {
@@ -110,14 +111,6 @@ class ajax extends rest
         return $pmsg;
     }
 
-    protected function is_login()
-    {
-        $is_login = parent::is_login();
-        if(isset($_REQUEST["user-token"]))
-        {
-            return ($is_login && ($_SESSION["user"]["token"] === $_REQUEST["user-token"]));
-        }
-        return false;
-    }
+
 
 }

@@ -1,5 +1,5 @@
 <?php
-namespace core\backend\mvc\ajax;
+namespace core\backend\mvc\controller\ajax;
 use core\backend\database\dataset;
 
 /**

@@ -25,7 +25,7 @@
                     foreach($users as $user)
                     {
                         echo "<tr id='{$user->id}'>";
-                        echo "  <td>".$user->get_gravatar("width:25px;")."</td>";
+                        echo "  <td>".$this->get_widget("gravatar",["email"=>$user->email,"username"=>$user->username])."</td>";
                         echo "  <td>{$user->name}</td>";
                         echo "  <td>{$user->email}</td>";
                         echo "  <td>{$user->group}</td>";

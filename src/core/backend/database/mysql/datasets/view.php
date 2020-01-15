@@ -17,6 +17,11 @@ class view extends dataset
         }
     }
 
+    public function __toString()
+    {
+        return $this->name;
+    }
+
     public function get_name()
     {
         return $this->name;
