@@ -9,7 +9,7 @@ class root extends ajax
     {
         return "Welcome";
     }
-
+    
     public function add_login()
     {
         if(isset($_REQUEST["email"]) && isset($_REQUEST["password"]))

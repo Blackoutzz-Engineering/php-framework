@@ -5,7 +5,7 @@ use core\program;
 use core\backend\components\database;
 use core\backend\routing\request;
 use core\common\str;
-use core\common\time\date;
+use core\common\components\time\date;
 use core\backend\components\filesystem\folder;
 use core\backend\components\filesystem\file;
 use core\backend\database\mysql\datasets\controller;
@@ -72,10 +72,11 @@ class routing
 
     protected function parse_request()
     {
-        if($this->is_managed())
+        if($this->is_managed() && ($this->get_controller_type() !== "ajax" && $this->get_controller_type() !== "api"))
             return $this->parse_managed_request();
-        else 
-            return $this->parse_unmanaged_request();
+         
+        $this->mode = mode::unmanaged;
+        return $this->parse_unmanaged_request();
     }
 
     protected function parse_request_parameters($pstarting_point = 0)
@@ -105,7 +106,7 @@ class routing
                     {
                         if($this->parse_managed_controller($parameters[$parameter_id]))
                         {
-                            if($this->controller->get_name() == trim($parameters[$parameter_id])) 
+                            if($this->controller->get_name() == $this->parse_view_name(trim($parameters[$parameter_id]))) 
                                 $parameter_id++;
                         }
                         elseif(!$this->on_default_controller()) return false;
@@ -157,7 +158,7 @@ class routing
                     {
                         if($this->parse_unmanaged_view($parameters[$parameter_id]))
                         {
-                            if($this->view->get_name() == trim($parameters[$parameter_id])) 
+                            if($this->view->get_name() == trim($this->parse_view_name($parameters[$parameter_id]))) 
                                 $parameter_id++;
                             $this->controller_view = new controller_view(["view"=>$this->view,"controller"=>$this->controller]);
                         }
@@ -479,7 +480,7 @@ class routing
     {
         try
         {
-            $view = trim(strtolower($pview));
+            $view = trim(strtolower(str_replace(["-"," "],"_",$pview)));
             if(preg_match('~^([A-z]+[A-z-_]*[A-z]+)$~im',$view,$view_names))
             {
                 return $view_names[1];

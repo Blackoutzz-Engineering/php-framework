@@ -54,7 +54,7 @@ class log
         if(file_put_contents($log,json_encode($log_data)) === false)
         {
             error_log("log::save -> Permission denied to create log's file.");
-            die("Permission denied to write to log's file.");
+            return false;
         }
         return true;
     }

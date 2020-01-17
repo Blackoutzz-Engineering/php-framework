@@ -19,6 +19,7 @@ services:
             - ./html/ui/:/var/www/html/ui/
             - ./html/assets/:/var/www/html/assets/
             - ./html/logs/apache/:/var/log/apache2/
+            - ./html/logs/exceptions/:/var/www/html/logs
             - ./config/php/:/usr/local/etc/php/
             - ./html/logs/sessions/:/tmp/php/sessions/
         environment: 

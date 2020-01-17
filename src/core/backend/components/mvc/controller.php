@@ -58,7 +58,7 @@ abstract class controller
     {
         try
         {
-            $view = trim(strtolower(str_replace("-","_",$this->routing->get_view_name())));
+            $view = trim(strtolower(str_replace(["-"," "],"_",$this->routing->get_view_name())));
             if(preg_match('~^([A-z]+[A-z-_]*[A-z]+)$~im',$view))
             {
                 if(method_exists('core\\backend\\components\\mvc\\controller',$view)) 
