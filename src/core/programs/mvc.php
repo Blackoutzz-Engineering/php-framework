@@ -99,7 +99,7 @@ abstract class mvc extends program
             }
             die("something is missing to fully configure the container");
         }
-        elseif($_SERVER["argv"][1] === "docker-setup")
+        elseif(isset($_SERVER["argv"][1]) && isset($_SERVER["argv"][1]) === "docker-setup")
         {   
             die("application loaded and ready.");
         }
