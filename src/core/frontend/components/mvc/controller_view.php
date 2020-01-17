@@ -3,6 +3,7 @@ namespace core\frontend\components\mvc;
 use core\frontend\components\template;
 use core\backend\components\file;
 use core\frontend\components\widget;
+use core\backend\mvc\controller\routing;
 use core\frontend\html\element;
 use core\common\exception;
 use core\program;
@@ -28,10 +29,13 @@ class controller_view extends template
 
     protected $cache;
 
+    protected $routing;
+
     public function __construct($preference,$pcache,$pview_data)
     {
         $this->reference = $preference;
         $this->view_data = $pview_data;
+        $this->routing = new routing();
         $this->cache = $pcache;
     }
 
@@ -117,17 +121,17 @@ class controller_view extends template
     {
         try
         {
-            $controller_name = $this->get_controller_name();
-            $view_name = $this->get_view_name();
+            $controller_name = $this->routing->get_contoller_name();
+            $view_name = $this->routing->get_view_name();
             if($this->reference === "core")
             {
                 if(is_file("assets".DS."scripts".DS.$controller_name.DS.$view_name.".js"))
                 {
                     if($name != "")
                     {
-                        echo ("<script src='assets/scripts/{$name}.js'></script>");
+                        echo ("<script src='/assets/scripts/{$name}.js'></script>");
                     } else {
-                        echo ("<script src='assets/scripts/".$controller_name."/".$view_name.".js'></script>");
+                        echo ("<script src='/assets/scripts/".$controller_name."/".$view_name.".js'></script>");
                     }
                 }
                 return true;
@@ -136,9 +140,9 @@ class controller_view extends template
                 {
                     if($name != "")
                     {
-                        echo ("<script src='plugins/{$this->reference}/assets/scripts/{$name}.js'></script>");
+                        echo ("<script src='/plugins/{$this->reference}/assets/scripts/{$name}.js'></script>");
                     } else {
-                        echo ("<script src='plugins/{$this->reference}/assets/scripts/".$controller_name."/".$view_name.".js'></script>");
+                        echo ("<script src='/plugins/{$this->reference}/assets/scripts/".$controller_name."/".$view_name.".js'></script>");
                     }
                 }
                 return true;

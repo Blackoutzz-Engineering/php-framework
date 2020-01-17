@@ -80,7 +80,10 @@ abstract class mvc extends program
             && isset($_SERVER["DATABASE_USER"])
             && isset($_SERVER["DATABASE_PASSWORD"]))
             {
-                sleep(30);
+                if(isset($_SERVER["DELAY"]))
+                    sleep($_SERVER["DELAY"]);
+                else
+                    sleep(30);
                 if($this->configure_database()
                 && isset($_SERVER["ADMIN_USERNAME"]) 
                 && isset($_SERVER["ADMIN_PASSWORD"])
@@ -95,6 +98,10 @@ abstract class mvc extends program
                 }
             }
             die("something is missing to fully configure the container");
+        }
+        elseif($_SERVER["argv"][1] === "docker-setup")
+        {   
+            die("application loaded and ready.");
         }
         else
         {

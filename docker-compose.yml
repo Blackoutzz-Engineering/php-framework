@@ -30,6 +30,7 @@ services:
             - ADMIN_USERNAME=admin
             - ADMIN_PASSWORD=admin
             - ADMIN_EMAIL=admin@localhost
+            - DELAY=30
     db:
         image: mariadb
         restart: always

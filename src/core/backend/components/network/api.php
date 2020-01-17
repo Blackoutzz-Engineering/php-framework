@@ -83,7 +83,7 @@ class api extends curl
         try
         {
             $request = $this->curl->create_delete_request($this->url.$ppath,$pheaders,$pcookies);
-            $request->set_user_agent("blackoutzz/framework - API");
+            $request->set_user_agent("Blackoutzz@web.framework - API");
             $result = $request->send();
             if($result instanceof request_result)
             {
