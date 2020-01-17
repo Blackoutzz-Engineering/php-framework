@@ -38,7 +38,8 @@ class log
         }
         if(!is_file($log))
         {
-            if(file_put_contents($log,json_encode(array())) === false){
+            if(file_put_contents($log,json_encode(array())) === false)
+            {
                 error_log("log::get -> Permission denied to create log's file.");
                 die("Permission denied to create log's file.");
             }
