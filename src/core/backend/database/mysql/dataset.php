@@ -67,7 +67,7 @@ abstract class dataset extends database_dataset
 
     protected function execute_prepared_select_query($pquery,$pparam_types = false,$pparams = false,$pid = 0)
     {
-        $this->database($pid)->get_connection()->get_prepared_select_query($pquery,$pparam_types,$pparams);
+        return $this->database($pid)->get_connection()->get_prepared_select_query($pquery,$pparam_types,$pparams);
     }
 
     protected function execute_prepared_insert_query($pquery,$pparam_types = false,$pparams = false,$pid = 0)
