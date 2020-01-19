@@ -47,15 +47,12 @@ class api extends curl
             $result = $request->send();
             if($result instanceof request_result)
             {
-                if($result->is_successful())
+                $content_type = $result->get_header("content-type");
+                if($content_type === "application/json" || $content_type === "text/json")
                 {
-                    $content_type = $result->get_header("content-type");
-                    if($content_type === "application/json" || $content_type === "text/json")
-                    {
-                        return json_decode($result->get_body());
-                    }
-                    return $result->get_body();
+                    return json_decode($result->get_body());
                 }
+                return $result->get_body();
             }
             throw new exception("Api request failed.");
         } catch (exception $e)
@@ -76,15 +73,12 @@ class api extends curl
             $result = $request->send();
             if($result instanceof request_result)
             {
-                if($result->is_successful())
+                $content_type = $result->get_header("content-type");
+                if($content_type === "application/json" || $content_type === "text/json")
                 {
-                    $content_type = $result->get_header("content-type");
-                    if($content_type === "application/json" || $content_type === "text/json")
-                    {
-                        return json_decode($result->get_body());
-                    }
-                    return $result->get_body();
+                    return json_decode($result->get_body());
                 }
+                return $result->get_body();
             }
             throw new exception("Api request failed.");
         } catch (exception $e)
@@ -105,15 +99,12 @@ class api extends curl
             $result = $request->send();
             if($result instanceof request_result)
             {
-                if($result->is_successful())
+                $content_type = $result->get_header("content-type");
+                if($content_type === "application/json" || $content_type === "text/json")
                 {
-                    $content_type = $result->get_header("content-type");
-                    if($content_type === "application/json" || $content_type === "text/json")
-                    {
-                        return json_decode($result->get_body());
-                    }
-                    return $result->get_body();
+                    return json_decode($result->get_body());
                 }
+                return $result->get_body();
             }
             throw new exception("Api request failed.");
         } catch (exception $e)
@@ -134,15 +125,12 @@ class api extends curl
             $result = $request->send();
             if($result instanceof request_result)
             {
-                if($result->is_successful())
+                $content_type = $result->get_header("content-type");
+                if($content_type === "application/json" || $content_type === "text/json")
                 {
-                    $content_type = $result->get_header("content-type");
-                    if($content_type === "application/json" || $content_type === "text/json")
-                    {
-                        return json_decode($result->get_body());
-                    }
-                    return $result->get_body();
+                    return json_decode($result->get_body());
                 }
+                return $result->get_body();
             }
             throw new exception("Api request failed.");
         } catch (exception $e)

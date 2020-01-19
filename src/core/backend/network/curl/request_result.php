@@ -45,7 +45,7 @@ class request_result
         {
             if(preg_match("~^\s*([^:]+)[:](.*)\s*$~m",$header,$array))
             {
-                $this->headers[trim($array[1])] = trim($array[2]); 
+                $this->headers[trim(strtolower($array[1]))] = trim($array[2]); 
             }
         }
     }
