@@ -15,6 +15,7 @@ class curl
             if($purl)
             {
                 $parameters["request"] = "GET";
+                $parameters["url"] = $purl;
                 if(is_array($pheaders) && count($pheaders) >= 1) $parameters["header"] = $pheaders;
                 if(is_array($pcookies) && count($pcookies) >= 1) $parameters["cookie"] = $pcookies;
                 return new request($parameters);
@@ -36,6 +37,7 @@ class curl
             if($purl)
             {
                 $parameters["request"] = "POST";
+                $parameters["url"] = $purl;
                 if(is_array($pheaders) && count($pheaders) >= 1) $parameters["header"] = $pheaders;
                 if(is_array($pcookies) && count($pcookies) >= 1) $parameters["cookie"] = $pcookies;
                 if(is_array($pdata) && count($pdata) >= 1) $parameters["data"] = $pdata;
@@ -57,6 +59,7 @@ class curl
             if($purl)
             {
                 $parameters["request"] = "PUT";
+                $parameters["url"] = $purl;
                 if(is_array($pheaders) && count($pheaders) >= 1) $parameters["header"] = $pheaders;
                 if(is_array($pcookies) && count($pcookies) >= 1) $parameters["cookie"] = $pcookies;
                 if(is_array($pdata) && count($pdata) >= 1) $parameters["data"] = $pdata;
@@ -78,6 +81,7 @@ class curl
             if($purl)
             {
                 $parameters["request"] = "POST";
+                $parameters["url"] = $purl;
                 if(is_array($pheaders) && count($pheaders) >= 1) $parameters["header"] = $pheaders;
                 if(is_array($pcookies) && count($pcookies) >= 1) $parameters["cookie"] = $pcookies;
                 if(is_array($pdata) && count($pdata) >= 1) $parameters["form"] = $pdata;
@@ -99,6 +103,7 @@ class curl
             if($purl)
             {
                 $parameters["request"] = "DELETE";
+                $parameters["url"] = $purl;
                 if(is_array($pheaders) && count($pheaders) >= 1) $parameters["header"] = $pheaders;
                 if(is_array($pcookies) && count($pcookies) >= 1) $parameters["cookie"] = $pcookies;
                 return new request($parameters);

@@ -2,6 +2,10 @@
 namespace core\backend\network\curl;
 use core\backend\network\http\status_code;
 use core\common\components\regex;
+use core\backend\database\dataset_array;
+use core\backend\database\dataset;
+use core\common\components\stack;
+
 
 /**
  * request_result short summary.
@@ -28,10 +32,22 @@ class request_result
 
     public function __construct($pcode,$pheaders,$pbody,$perror)
     {
-        $this->headers = $pheaders;
+        $this->parse_headers($pheaders);
         $this->body = $pbody;
         $this->code = $pcode;
         $this->error = $perror;
+    }
+
+    protected function parse_headers($pheaders)
+    {
+        $this->headers = new stack();
+        foreach(explode("\n",$pheaders) as $header)
+        {
+            if(preg_match("~^\s*([^:]+)[:](.*)\s*$~m",$header,$array))
+            {
+                $this->headers[$array[1]] = $array[2]; 
+            }
+        }
     }
 
     public function __toString()
@@ -42,6 +58,12 @@ class request_result
     public function get_headers()
     {
         return $this->headers;
+    }
+
+    public function get_header($pname)
+    {
+        if(isset($this->headers[$pname])) return $this->headers[$pname];
+        return "";
     }
 
     public function get_code()

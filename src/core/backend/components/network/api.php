@@ -31,6 +31,11 @@ class api extends curl
         $this->curl = new curl();
     }
 
+    protected on_request_creation(&$request)
+    {
+        //override this to add feature to request.
+    }
+
     //Get
     protected function send_get_request($ppath,$pheaders = array(),$pcookies = array())
     {
@@ -38,12 +43,18 @@ class api extends curl
         {
             $request = $this->curl->create_get_request($this->url.$ppath,$pheaders,$pcookies);
             $request->set_user_agent("Blackoutzz@web.framework - API");
+            $this->on_request_creation($request);
             $result = $request->send();
             if($result instanceof request_result)
             {
                 if($result->is_successful())
                 {
-                    return new dataset(json_decode($result->get_body()));
+                    $content_type = $result->get_header("content-type");
+                    if($content_type === "application/json" || $content_type === "text/json")
+                    {
+                        return json_decode($result->get_body());
+                    }
+                    return $result->get_body();
                 }
             }
             throw new exception("Api request failed.");
@@ -61,12 +72,18 @@ class api extends curl
         {
             $request = $this->curl->create_post_request($this->url.$ppath,$pheaders,$pcookies,$pdata);
             $request->set_user_agent("Blackoutzz@web.framework - API");
+            $this->on_request_creation($request);
             $result = $request->send();
             if($result instanceof request_result)
             {
                 if($result->is_successful())
                 {
-                    return new dataset(json_decode($result->get_body()));
+                    $content_type = $result->get_header("content-type");
+                    if($content_type === "application/json" || $content_type === "text/json")
+                    {
+                        return json_decode($result->get_body());
+                    }
+                    return $result->get_body();
                 }
             }
             throw new exception("Api request failed.");
@@ -84,12 +101,18 @@ class api extends curl
         {
             $request = $this->curl->create_delete_request($this->url.$ppath,$pheaders,$pcookies);
             $request->set_user_agent("Blackoutzz@web.framework - API");
+            $this->on_request_creation($request);
             $result = $request->send();
             if($result instanceof request_result)
             {
                 if($result->is_successful())
                 {
-                    return new dataset(json_decode($result->get_body()));
+                    $content_type = $result->get_header("content-type");
+                    if($content_type === "application/json" || $content_type === "text/json")
+                    {
+                        return json_decode($result->get_body());
+                    }
+                    return $result->get_body();
                 }
             }
             throw new exception("Api request failed.");
@@ -107,12 +130,18 @@ class api extends curl
         {
             $request = $this->curl->create_put_request($this->url.$ppath,$pheaders,$pcookies,$pdata);
             $request->set_user_agent("Blackoutzz@web.framework - API");
+            $this->on_request_creation($request);
             $result = $request->send();
             if($result instanceof request_result)
             {
                 if($result->is_successful())
                 {
-                    return new dataset(json_decode($result->get_body()));
+                    $content_type = $result->get_header("content-type");
+                    if($content_type === "application/json" || $content_type === "text/json")
+                    {
+                        return json_decode($result->get_body());
+                    }
+                    return $result->get_body();
                 }
             }
             throw new exception("Api request failed.");
