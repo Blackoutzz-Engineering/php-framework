@@ -2,6 +2,7 @@
 namespace core\backend\network\curl;
 use core\common\regex;
 use core\program;
+use core\backend\components\filesystem\file;
 
 /**
  * curl request.
@@ -143,7 +144,12 @@ class request
         {
             foreach($pdata as $data)
             {
-                $this->posts[] = new post($data,post_type::post);
+                if($data instanceof file)
+                {
+                    $this->posts[] = new post("@".$data->get_path(),post_type::file);
+                } else {
+                    $this->posts[] = new post($data,post_type::post);
+                }
             }
         }
 
