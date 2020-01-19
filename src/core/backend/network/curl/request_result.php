@@ -122,15 +122,18 @@ class request_result
         try{
             if($this->body === "" || !$this->code || $this->code == 0) throw new exception("NULL Request result");
             if($this->code === status_code::internal_server_error) return "NONE";
-            if($this->code === status_code::forbidden) {
+            if($this->code === status_code::forbidden) 
+            {
                 $block = new regex("X-Sucuri-Block: +([A-z0-9]+) *");
-                if($block->match($this->headers)){
+                if($block->match($this->headers))
+                {
                     return $block->get_match($this->headers)[1];
                 }
             }
             return "NONE";
         }
-        catch (Exception $e) {
+        catch (Exception $e) 
+        {
             return "NONE";
         }
     }

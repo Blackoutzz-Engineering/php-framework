@@ -31,7 +31,7 @@ class api extends curl
         $this->curl = new curl();
     }
 
-    protected on_request_creation(&$request)
+    protected function on_request_creation(&$request)
     {
         //override this to add feature to request.
     }
