@@ -1,11 +1,10 @@
 <?php 
-namespace core\backend\components;
-use core\component;
+namespace core\backend\components\network;
 use core\common\exception;
 use core\backend\network\curl\parser;
 use core\backend\network\curl\request;
 
-class curl extends component
+class curl
 {
 
     public function create_get_request($purl,$pheaders = array(),$pcookies = array())

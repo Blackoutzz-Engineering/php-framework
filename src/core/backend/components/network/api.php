@@ -1,7 +1,7 @@
 <?php
-namespace core\backend\components;
+namespace core\backend\components\network;
 use core\common\exception;
-use core\backend\components\curl;
+use core\backend\components\network\curl;
 use core\backend\database\dataset;
 use core\backend\network\curl\request_result;
 
