@@ -138,7 +138,8 @@ class request
         if(is_string($pdata))
         {
             $this->posts[] = new post($pdata,post_type::post);
-        } else if(is_array($pdata))
+        } 
+        else if(is_array($pdata))
         {
             foreach($pdata as $data)
             {
@@ -146,6 +147,21 @@ class request
             }
         }
 
+    }
+
+    public function set_data_upload($pdata)
+    {
+        if(is_string($pdata))
+        {
+            $this->posts[] = new post($pdata,post_type::file);
+        } 
+        else if(is_array($pdata))
+        {
+            foreach($pdata as $data)
+            {
+                $this->posts[] = new post($data,post_type::file);
+            }
+        }
     }
 
     public function set_form($pdata)
