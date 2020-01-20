@@ -17,7 +17,7 @@ use core\backend\network\curl\request_result;
 
 class api extends curl
 {
-    
+
     protected $curl;
 
     protected $url;
@@ -26,7 +26,7 @@ class api extends curl
 
     public function __construct()
     {
-        $this->curl = new curl();
+        //Override this to add your key and url
     }
 
     protected function on_request_creation(&$request)
@@ -39,7 +39,7 @@ class api extends curl
     {
         try
         {
-            $request = $this->curl->create_get_request($this->url.$ppath,$pheaders,$pcookies);
+            $request = $this->create_get_request($this->url.$ppath,$pheaders,$pcookies);
             $request->set_user_agent("Blackoutzz@web.framework - API");
             $this->on_request_creation($request);
             $result = $request->send();
@@ -60,7 +60,7 @@ class api extends curl
     {
         try
         {
-            $request = $this->curl->create_post_request($this->url.$ppath,$pheaders,$pcookies,$pdata);
+            $request = $this->create_post_request($this->url.$ppath,$pheaders,$pcookies,$pdata);
             $request->set_user_agent("Blackoutzz@web.framework - API");
             $this->on_request_creation($request);
             $result = $request->send();
@@ -81,7 +81,7 @@ class api extends curl
     {
         try
         {
-            $request = $this->curl->create_delete_request($this->url.$ppath,$pheaders,$pcookies);
+            $request = $this->create_delete_request($this->url.$ppath,$pheaders,$pcookies);
             $request->set_user_agent("Blackoutzz@web.framework - API");
             $this->on_request_creation($request);
             $result = $request->send();
@@ -102,7 +102,7 @@ class api extends curl
     {
         try
         {
-            $request = $this->curl->create_put_request($this->url.$ppath,$pheaders,$pcookies,$pdata);
+            $request = $this->create_put_request($this->url.$ppath,$pheaders,$pcookies,$pdata);
             $request->set_user_agent("Blackoutzz@web.framework - API");
             $this->on_request_creation($request);
             $result = $request->send();
