@@ -169,7 +169,12 @@ class file
 
     public function get_file_type()
     {
-        return static_file::get_file_type($this->filepath);
+        return static_file::get_type($this->filepath);
+    }
+
+    public function get_file_mime_type()
+    {
+        return static_file::get_mime_type($this->filepath);
     }
 
     public function extract($pfolderpath = './')

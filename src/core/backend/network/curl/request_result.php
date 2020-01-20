@@ -81,6 +81,16 @@ class request_result
         return $this->body;
     }
 
+    public function get_contents()
+    {
+        $content_type = $this->get_header("content-type");
+        if(preg_match('~^((?:application|text)/json);?.*$~im',$content_type))
+        {
+            return json_decode($this->body);
+        }
+        return $this->body;
+    }
+
     public function is_received()
     {
         if($this->code != 0 && $this->body != false) return true;
