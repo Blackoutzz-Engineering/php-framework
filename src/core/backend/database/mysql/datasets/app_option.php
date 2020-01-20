@@ -2,7 +2,7 @@
 namespace core\backend\database\mysql\datasets;
 use core\backend\database\mysql\dataset;
 
-class app_options extends dataset
+class app_option extends dataset
 {
 
     protected $option;

@@ -8,7 +8,7 @@ use core\backend\components\databases\mysql;
 use core\program;
 use core\common\exception;
 use core\backend\database\mysql\datasets\action;
-use core\backend\database\mysql\datasets\app_options;
+use core\backend\database\mysql\datasets\app_option;
 use core\backend\database\mysql\datasets\controller_view;
 use core\backend\database\mysql\datasets\controller;
 use core\backend\database\mysql\datasets\menu_button_option;
@@ -44,6 +44,89 @@ use core\backend\database\mysql\datasets\view;
 
 class model extends database_model
 {
+
+    public function create_app_option($poption,$pvalue)
+    {
+        try
+        {
+            if($this->get_connection()->is_connected())
+            {
+                if(is_string($poption)) $poption = $this->get_option_by_name($poption);
+                
+                $new_app_option = new app_option(array("option" => $poption,"value" => (string) $pvalue));
+                if($new_app_option->save()) return $new_app_option;
+                throw new exception("Something went wrong with the query from the model");
+            }
+            throw new exception("Model couldn't connect to the database");
+        } 
+        catch(exception $e)
+        {
+            return false;
+        }
+        
+    }
+
+    public function get_app_options($pmax = 250,$ppage = 1)
+    {
+        try
+        {
+            if($this->get_connection()->is_connected())
+            {
+                $app_options = new dataset_array();
+                $offset = $this->get_query_offset($pmax,$ppage);
+                if($data = $this->get_connection()->get_prepared_select_query("SELECT * FROM `app_options` LIMIT ? OFFSET ?","ii",array($pmax,$offset)))
+                {
+                    foreach($data as $pdata)
+                    {
+                        $app_options[] = new app_option($pdata);
+                    }
+                    return $app_options;
+                }
+                throw new exception("Something went wrong with the query from the model");
+            }
+            throw new exception("Model couldn't connect to the database");
+        } 
+        catch(exception $e)
+        {
+            return new dataset_array();
+        }
+    }
+
+    public function get_app_option_by_id($pid)
+    {
+        if($this->get_connection()->is_connected())
+        {
+            $app_options = new dataset_array();
+            if($data = $this->get_connection()->get_prepared_select_query("SELECT * FROM `app_options` where id=?","i",array($pid)))
+            {
+                foreach($data as $pdata)
+                {
+                    return new app_option($pdata);
+                }
+            }
+            throw new exception("Something went wrong with the query from the model");
+        }
+        throw new exception("Model couldn't connect to the database");
+    }
+
+    public function get_app_option_by_option($poption)
+    {
+        if($this->get_connection()->is_connected())
+        {
+            if(is_string($poption)) $poption = $this->get_option_by_name($poption);
+            $option = $this->get_parsed_id($poption);
+            $app_options = new dataset_array();
+            if($data = $this->get_connection()->get_prepared_select_query("SELECT * FROM `app_options` where option=?","i",array($option)))
+            {
+                foreach($data as $pdata)
+                {
+                    return new app_option($pdata);
+                }
+            }
+            throw new exception("Something went wrong with the query from the model");
+        }
+        throw new exception("Model couldn't connect to the database");
+    }
 
     public function create_menu_button($pname,$pcontroller_view = 1,$pcategory = 1)
     {
