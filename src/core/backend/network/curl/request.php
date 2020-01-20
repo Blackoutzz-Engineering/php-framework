@@ -142,13 +142,13 @@ class request
         } 
         else if(is_array($pdata))
         {
-            foreach($pdata as $data)
+            foreach($pdata as $key => $data)
             {
                 if($data instanceof file)
                 {
-                    $this->posts[] = new post("@".$data->get_path(),post_type::file);
+                    $this->posts[] = new post("{$key}=".@$data->get_path(),post_type::file);
                 } else {
-                    $this->posts[] = new post($data,post_type::post);
+                    $this->posts[] = new post("{$key}={$data}",post_type::post);
                 }
             }
         }
@@ -274,8 +274,21 @@ class request
 
     public function set_cookie($pcookies)
     {
-        $this->options["cookie"] = $pcookies;
-        curl_setopt($this->request,CURLOPT_COOKIE,$pcookies);
+        if(is_array($pcookies) && count($pcookies) >= 1)
+        {
+            $cookies = "";
+            foreach($pcookies as $cookie)
+            {
+                $cookies .= $cookie;
+            }
+            $this->options["cookie"] = $cookies;
+            curl_setopt($this->request,CURLOPT_COOKIE,$pcookies);
+        } 
+        elseif(is_string($pcookies))
+        {
+            $this->options["cookie"] = $pcookies;
+            curl_setopt($this->request,CURLOPT_COOKIE,$pcookies);
+        }
     }
 
     public function set_referer($preferer)

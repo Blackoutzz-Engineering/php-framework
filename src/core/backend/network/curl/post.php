@@ -45,7 +45,10 @@ class post
                         $this->type = post_type::file;
                         if(preg_match("~^([^;]+);[\s\t\r]*type=([^\s\t\r]*)[\s\t\r]*$~im",$this->value,$mime_type)){
                             $this->value = $mime_type[1];
-                            $this->mime_type = $mime_type[2];
+                            if(isset($mime_type[2]))
+                                $this->mime_type = $mime_type[2];
+                            else
+                                $this->mime_type = mime_content_type($mime_type[1]);
                         }
                     }
                 }
