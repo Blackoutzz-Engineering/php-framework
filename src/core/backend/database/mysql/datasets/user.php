@@ -24,9 +24,23 @@ class user extends dataset
     {
         if($this->exist())
         {
-            return $this->execute_prepared_update_query("UPDATE `users` SET name=? , password=? , email=? , group=? , state=? WHERE id=?","sssiii",array($this->name,$this->password,$this->email,$this->group,$this->state,$this->id),$pid);
-        } else {
-            return $this->execute_prepared_insert_query("INSERT INTO `users` (`name`,`password`,`email`,`group`,`state`) VALUES (?,?,?,?,?)","sssii",array($this->name,$this->password,$this->email,$this->group,$this->state),$pid);
+            return $this->execute_prepared_update_query(
+                "UPDATE `users` SET name=? , password=? , email=? , group=? , state=? WHERE id=?",
+                "sssiii",
+                array($this->name,
+                    $this->password,
+                    $this->email,
+                    $this->group,
+                    $this->state,
+                    $this->id
+                ),
+                $pid);
+        }
+        else
+        {
+            return $this->execute_prepared_insert_query(
+                "INSERT INTO `users` (`name`,`password`,`email`,`group`,`state`) VALUES (?,?,?,?,?)",
+                "sssii",array($this->name,$this->password,$this->email,$this->group,$this->state),$pid);
         }
     }
 

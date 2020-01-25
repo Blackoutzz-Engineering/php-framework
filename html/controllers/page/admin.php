@@ -46,16 +46,24 @@ class admin extends page
     {
         if($pname === false) $this->redirect("/admin/groups");
         $users = $this->databases->get_mysql_database_by_id()->get_model();
-        if(regex::is_numeric($pname)) {
+        if(regex::is_numeric($pname))
+        {
             $groups = $users->get_user_groups_by_id($pname);
-        } else if(regex::is_slug($pname)){
+        }
+        else if(regex::is_slug($pname))
+        {
             $groups = $users->get_user_groups_by_name($pname);
-        } else {
+        }
+        else
+        {
             $this->redirect("/admin/groups");
         }
-        if(count($groups) >= 1){
+        if(count($groups) >= 1)
+        {
             $this->send($groups[0],"group");
-        } else {
+        }
+        else
+        {
             $this->redirect("/admin/groups");
         }
         $this->send($users->get_controller_views(200),"pages");
