@@ -39,6 +39,24 @@ class controller_view extends template
         $this->cache = $pcache;
     }
 
+    protected function get_user()
+    {
+        if(isset(program::$users[0]))
+        {
+            return program::$users[0];
+        }
+        return false;
+    }
+
+    protected function get_session()
+    {
+        if(isset(program::$session))
+        {
+            return program::$session;
+        }
+        return false;
+    }
+
     protected function get_data($pname = false)
     {
         try

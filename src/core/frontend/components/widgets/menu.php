@@ -52,13 +52,15 @@ class menu extends widget
                 if(count($buttons) >=1 )
                 {
                     $categories[] = [
-                        new li(["class"=>"nav-item"],
-                            new a(["class"=>"nav-link collapse","href"=>"#","data-toggle"=>"collapse","data-target"=>"#collapsePages","aria-expanded"=>"false", "aria-controls"=>"collapsePages"],
+                        new li(["class"=>"nav-item"],[
+                            new a(["class"=>"nav-link collapse","href"=>"#","data-toggle"=>"collapse","data-target"=>"#collapsePages","aria-expanded"=>"false", "aria-controls"=>"collapsePages"],[
                                 new i(["class"=>"fas fa-fw fa-folder"]),
                                 new span([],[$category->get_name()])
+                            ]),
+                            new div(["id"=>"collapsePages","class"=>"collapse","aria-labelledby"=>"headingPages","data-parent"=>"#accordionSidebar"],
+                                new div(["class"=>"bg-white py-2 collapse-inner rounded"],$buttons)
                             )
-                            
-                        )
+                        ])
                     ];
                     $buttons = [];
                 }
@@ -69,19 +71,15 @@ class menu extends widget
         if(count($buttons) >=1 )
         {
             $categories[] = [
-                new li(["class"=>"nav-item"],
-                    [new a(["class"=>"nav-link collapsed","href"=>"#","data-toggle"=>"collapse","data-target"=>"#collapsePages","aria-expanded"=>"false", "aria-controls"=>"collapsePages"],
-                        [
-                            new i(["class"=>"fas fa-fw fa-folder"]),
-                            new span([],"$last_category")
-                        ]
-                    ),
+                new li(["class"=>"nav-item"],[
+                    new a(["class"=>"nav-link collapsed","href"=>"#","data-toggle"=>"collapse","data-target"=>"#collapsePages","aria-expanded"=>"false", "aria-controls"=>"collapsePages"],[
+                        new i(["class"=>"fas fa-fw fa-folder"]),
+                        new span([],"$last_category")
+                    ]),
                     new div(["id"=>"collapsePages","class"=>"collapse","aria-labelledby"=>"headingPages","data-parent"=>"#accordionSidebar"],
-                        new div(["class"=>"bg-white py-2 collapse-inner rounded"],
-                            $buttons
-                        )
-                    )]
-                )
+                        new div(["class"=>"bg-white py-2 collapse-inner rounded"],$buttons)
+                    )
+                ])
             ];
         }
         return $categories;
