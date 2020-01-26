@@ -27,12 +27,15 @@ class log
     public function save($pdata)
     {
         $id = 0;
-        if(isset(program::$user)) $id = program::$user->get_id();
+        if(isset(program::$users[0])) $id = program::$users[0]->get_id();
         $folder = $this->folderpath.$this->name.DS.date("Y").DS.date("F").DS;
         $log = $this->folderpath.$this->name.DS.date("Y").DS.date("F").DS.date("j").".log";
         if(!is_dir($folder)){
             if(!mkdir($folder,755,true)){
-                error_log("log::get -> Permission denied to create log's folder.");
+                if(program::is_running_dev_mode()) 
+                    echo "log::get -> Permission denied to create log's folder.";
+                else 
+                    error_log("log::get -> Permission denied to create log's folder.");
                 return false;
             }
         }
@@ -40,21 +43,31 @@ class log
         {
             if(file_put_contents($log,json_encode(array())) === false)
             {
-                error_log("log::get -> Permission denied to create log's file.");
+                if(program::is_running_dev_mode()) 
+                    echo "log::get -> Permission denied to create log's file.";
+                else 
+                    error_log("log::get -> Permission denied to create log's file.");
                 die("Permission denied to create log's file.");
             }
         }
         $log_data = json_decode(file_get_contents($log),true);
-        if(!is_array($log_data))
+        if(!is_array($log_data) || (is_array($log_data) && count($log_data) == 0))
         {
             $log_data = array();
-            $log_data["".runid.str::get_hex($id).""] = array();
-            $log_data[runid.str::get_hex($id)][] = $pdata;
+            $log_data[runid] = array();
+            $log_data[runid][] = $pdata;
+        } else {
+
+            $log_data[runid] = array();
+            $log_data[runid][] = $pdata;
         }
         
         if(file_put_contents($log,json_encode($log_data)) === false)
         {
-            error_log("log::save -> Permission denied to create log's file.");
+            if(program::is_running_dev_mode()) 
+                echo "log::get -> Permission denied to create log's file.";
+            else 
+                error_log("log::get -> Permission denied to create log's file.");
             return false;
         }
         return true;

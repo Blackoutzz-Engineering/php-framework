@@ -5,7 +5,7 @@ use core\backend\database\mysql\model;
 use core\backend\components\log;
 use core\common\str;
 use core\common\time\sdate;
-use core\common\time\date;
+use core\common\components\time\date;
 use core\backend\components\filesystem\file;
 
 /**
@@ -51,7 +51,8 @@ class exception extends \Exception
             "msg"=>$this->message,
             "file"=>$this->file,
             "code"=>$this->code,
-            "line"=>$this->line
+            "line"=>$this->line,
+            "uri"=>$_SERVER["REQUEST_URI"]
         );
         $this->log->save($exception_log);
     }
@@ -84,63 +85,6 @@ class exception extends \Exception
     static function get_exceptions()
     {
         return self::$exceptions;
-    }
-
-}
-
-class exception_log
-{
-
-    protected $date;
-
-    protected $user;
-
-    protected $message;
-
-    protected $file;
-
-    protected $code;
-
-    protected $line;
-
-    public function __construct($pdata)
-    {
-        $this->date = $pdata["date"];
-        $this->user = program::$users[0];
-        $this->file = $pdata["file"];
-        $this->code = $pdata["code"];
-        $this->line = $pdata["line"];
-        $this->message = $pdata["msg"];
-    }
-
-    public function get_user()
-    {
-        return $this->user;
-    }
-
-    public function get_date()
-    {
-        return new date($this->date,sdate::today);
-    }
-
-    public function get_message()
-    {
-        return $this->message;
-    }
-
-    public function get_file()
-    {
-        return new file($this->file);
-    }
-
-    public function get_code()
-    {
-        return $this->code;
-    }
-
-    public function get_line()
-    {
-        return $this->line;
     }
 
 }

@@ -156,7 +156,7 @@ class connection extends database_connection
         {
             if(!is_null($this->handler)) $prepared = $this->handler->prepare($request);
             else $prepared = false;
-            if(!$prepared) throw new exception("Impossible to prepare SQL request : {$request}");
+            if(!$prepared) throw new exception($this->handler->error,$this->handler->errno);
             if($pparams !== false && is_array($pparams) && is_string($param_types))
             {
                 $params = array();
@@ -167,7 +167,7 @@ class connection extends database_connection
                 call_user_func_array(array($prepared,"bind_param"),array_merge(array($param_types),$params));
             }
             $prepared->execute();
-            if($prepared->error !== false && $prepared->errno !== 0) throw new Exception("Error: {$prepared->error} , Request: [{$request}]");
+            if($prepared->error !== false && $prepared->errno !== 0) throw new exception($prepared->error,$prepared->errno);
             if($prepared->insert_id !== 0 && $prepared->insert_id !== false && $prepared->insert_id !== -1)
             {
                 $this->last_id = $prepared->insert_id;
@@ -175,12 +175,11 @@ class connection extends database_connection
                 return true;
             } else {
                 $prepared->close();
-                throw new Exception("Error: Nothing inserted , Request: [{$request}]");
+                throw new exception($prepared->error,$prepared->errno);
             }
         }
         catch (exception $e)
         {
-            var_dump($this->handler);
             return false;
         }
     }
@@ -191,7 +190,7 @@ class connection extends database_connection
         {
             if(!is_null($this->handler)) $prepared = $this->handler->prepare($request);
             else $prepared = false;
-            if(!$prepared) throw new exception("Impossible to prepare SQL request : {$request}");
+            if(!$prepared) throw new exception($this->handler->error,$this->handler->errno);
             if($pparams !== false && is_array($pparams) && is_string($param_types))
             {
                 $params = array();
@@ -199,13 +198,12 @@ class connection extends database_connection
                 {
                     $params[$key] = &$pparams[$key];
                 }
-                //$prepared->bind_param($param_types,$pparams["id"]); // Working.
                 call_user_func_array(array($prepared,"bind_param"),array_merge(array($param_types),$params));
             }
             $prepared->execute();
             if($prepared->error !== false && $prepared->errno !== 0)
             {
-                throw new exception("Error: {$prepared->error} , Request: [{$request}]");
+                throw new exception($prepared->error,$prepared->errno);
             } else {
                 if($prepared->affected_rows !== -1)
                 {
@@ -213,13 +211,12 @@ class connection extends database_connection
                     return true;
                 } else {
                     $prepared->close();
-                    throw new exception("Error: Nothing Updated , Request: [{$request}]");
+                    throw new exception($prepared->error,$prepared->errno);
                 }
             }
         }
         catch (exception $e)
         {
-            var_dump($e);
             return false;
         }
     }

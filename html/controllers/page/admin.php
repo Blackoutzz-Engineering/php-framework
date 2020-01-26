@@ -3,6 +3,7 @@ namespace controllers\page;
 use core\backend\components\mvc\controllers\page;
 use core\program;
 use core\common\regex;
+use core\backend\components\filesystem\file;
 
 /**
  * admin short summary.
@@ -113,7 +114,8 @@ class admin extends page
 
     public function logs()
     {
-
+        $log_file = new file(program::$path."logs/exceptions/".date("Y").DS.date("F").DS.date("j").".log",false);
+        $this->send(json_decode($log_file->get_contents()),"logs");
     }
 
     public function plugins()
