@@ -6,7 +6,7 @@ use core\backend\database\mysql\model;
 use core\backend\database\mysql\datasets\user;
 use core\backend\database\dataset;
 use core\backend\database\dataset_array;
-
+use core\program;
 
 /**
  * API Controller.
@@ -98,6 +98,7 @@ class api extends rest
             } else {
                 $this->on_json_output($data);
             }
+            program::end($e->get_code());
         }
     }
 

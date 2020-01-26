@@ -34,20 +34,16 @@ class exception extends \Exception
         parent::__construct(str::sanitize($message),$code,$previous);
         self::$exceptions[] = $this;
         $this->date = time();
-        if(program::$debug == 1)
-        {
-            $this->log = new log("exceptions");
-            $this->save();
-        }
-        
+        $this->log = new log("exceptions");
+        $this->save();
     }
 
     protected function save()
     {
         $id=0;
-        if(isset(program::$user))
+        if(isset(program::$users[0]))
         {
-            $id = program::$user->get_id();
+            $id = program::$users[0]->get_id();
         }
         $exception_log = array(
             "date"=>$this->date,
@@ -110,7 +106,7 @@ class exception_log
     public function __construct($pdata)
     {
         $this->date = $pdata["date"];
-        $this->user = model::get_user_by_id($pdata["user"]);
+        $this->user = program::$users[0];
         $this->file = $pdata["file"];
         $this->code = $pdata["code"];
         $this->line = $pdata["line"];

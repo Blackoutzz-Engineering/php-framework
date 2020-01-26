@@ -25,38 +25,66 @@ class menu extends widget
 
     protected $buttons;
 
+    protected $blacklist = [];
+
     public function __toHtml()
     {
         return [
             new hr(["class"=>"sidebar-divider my"]),
-            new div(["class"=>"sidebar-heading"],"Menu"),
-            $this->get_buttons()
+            new div(["class"=>"sidebar-heading"],"Dashboard"),
+            $this->get_categories(),
+            new hr(["class"=>"sidebar-divider my"])
         ];
     }
 
-    protected function get_buttons()
+    protected function get_categories()
     {
         $buttons = [];
+        $categories = [];
+        $last_category ??= "";
         foreach($this->buttons as $button)
         {
             $category = $button->get_category();
-            $last_category ??= $category->get_name();
             $controller_view = $button->get_controller_view();
+            if(in_array($category->get_name(),$this->blacklist)) continue;
             if($category->get_name() != $last_category)
             {
-                $buttons[] = [
-                    new hr(["class"=>"sidebar-divider my"]),
-                    new div(["class"=>"sidebar-heading"],$category->get_name())
-                ];
+                if(count($buttons) >=1 )
+                {
+                    $categories[] = [
+                        new li(["class"=>"nav-item"],
+                            new a(["class"=>"nav-link collapse","href"=>"#","data-toggle"=>"collapse","data-target"=>"#collapsePages","aria-expanded"=>"false", "aria-controls"=>"collapsePages"],
+                                new i(["class"=>"fas fa-fw fa-folder"]),
+                                new span([],[$category->get_name()])
+                            )
+                            
+                        )
+                    ];
+                    $buttons = [];
+                }
                 $last_category = $category->get_name();
-            }
-            $buttons[] = new li(["class"=>"nav-item"],[
-                new a(["class"=>"nav-link","href"=>"/{$controller_view}/"],[
-                    new span([],$button)
-                ])
-            ]);
+            } 
+            $buttons[] = new a(["class"=>"collapse-item","href"=>"/{$controller_view}/"],$button);
         }
-        return $buttons;
+        if(count($buttons) >=1 )
+        {
+            $categories[] = [
+                new li(["class"=>"nav-item"],
+                    [new a(["class"=>"nav-link collapsed","href"=>"#","data-toggle"=>"collapse","data-target"=>"#collapsePages","aria-expanded"=>"false", "aria-controls"=>"collapsePages"],
+                        [
+                            new i(["class"=>"fas fa-fw fa-folder"]),
+                            new span([],"$last_category")
+                        ]
+                    ),
+                    new div(["id"=>"collapsePages","class"=>"collapse","aria-labelledby"=>"headingPages","data-parent"=>"#accordionSidebar"],
+                        new div(["class"=>"bg-white py-2 collapse-inner rounded"],
+                            $buttons
+                        )
+                    )]
+                )
+            ];
+        }
+        return $categories;
     }
 
 }

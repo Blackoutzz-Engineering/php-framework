@@ -20,7 +20,6 @@ use core\program;
 class ajax extends rest
 {
 
-
     public function initialize()
     {
         header("Content-Type: text/json");
@@ -36,6 +35,12 @@ class ajax extends rest
                         $response = new response($value);
                         echo $response;
                     }
+                    if(!$data = program::pull())
+                    {
+                        $this->on_null();
+                    } else {
+                        echo $data;
+                    }
                     program::end(response_code::successful);
                 } else {   
                     throw new exception("Invalid api path",response_code::access_denied);
@@ -49,38 +54,62 @@ class ajax extends rest
             switch($e->get_code())
             {
                 case response_code::access_denied:
-                    $this->on_access_denied();
+                    $this->on_access_denied($e);
                 break;
                 case response_code::invalid_call:
-                    $this->on_invalid_call();
+                    $this->on_invalid_call($e);
                 break;
                 case response_code::unexpected_error:
-                    $this->on_unexpected_call_error();
+                    $this->on_unexpected_call_error($e);
                 break;
                 default:
-                    $this->on_invalid_call();
+                    $this->on_invalid_call($e);
             }
         }
             
     }
 
-    protected function on_access_denied()
+    protected function on_access_denied($pexception)
     {
-        $response = new response(false);
+        if($pexception instanceof exception)
+        {
+            if(program::is_running_dev_mode())
+                $response = new response($pexception);
+            else
+                $response = new response($pexception->get_message());
+        } else {
+            $response = new response(null);
+        }
         echo $response;
         program::end(response_code::access_denied);
     }
 
-    protected function on_invalid_call()
+    protected function on_invalid_call($pexception)
     {
-        $response = new response(false);
+        if($pexception instanceof exception)
+        {
+            if(program::is_running_dev_mode())
+                $response = new response($pexception);
+            else
+                $response = new response($pexception->get_message());
+        } else {
+            $response = new response(null);
+        }
         echo $response;
         program::end(response_code::invalid_call);
     }
 
-    protected function on_unexpected_call_error()
+    protected function on_unexpected_call_error($pexception)
     {
-        $response = new response(false);
+        if($pexception instanceof exception)
+        {
+            if(program::is_running_dev_mode())
+                $response = new response($pexception);
+            else
+                $response = new response($pexception->get_message());
+        } else {
+            $response = new response(null);
+        }
         echo $response;
         program::end(response_code::unexpected_error);
     }
@@ -103,6 +132,12 @@ class ajax extends rest
     protected function update_error($pcode,$pmsg)
     {
         return $this->on_error($pcode,$pmsg);
+    }
+
+    protected function on_null()
+    {
+        $response = new response(null);
+        echo $response;
     }
 
     protected function on_error($pcode,$pmsg)

@@ -24,11 +24,12 @@
                     $users = $this->get_data("users");
                     foreach($users as $user)
                     {
-                        echo "<tr id='{$user->id}'>";
+                        echo "<tr>";
                         echo "  <td>".$this->get_widget("gravatar",["email"=>$user->email,"username"=>$user->username])."</td>";
                         echo "  <td>{$user->name}</td>";
                         echo "  <td>{$user->email}</td>";
                         echo "  <td>{$user->group}</td>";
+                        echo "  <td> <button id=\"reset\" type=\"button\" data-id='{$user->id}' class=\"btn btn-primary\">Reset password</button> </td>";
                         echo "</tr>";
                     }
                     ?>
@@ -100,13 +101,15 @@
                             $groups = $this->get_data("groups");
                             foreach($groups as $group)
                             {
-                                if($group->name != "Guest" && $group->name != "Banned")
+                                if($group->get_name() != "Guest" || $group->get_name() != "Banned")
                                 {
-                                    if($group->name === "User")
+                                    if($group->get_name() === "User")
                                     {
-                                        $this->print("<option value='{$group->id}' Selected>{$group->name}</option>",true);
-                                    } else {
-                                        $this->print("<option value='{$group->id}'>{$group->name}</option>",true);
+                                        echo "<option value='{$group->get_id()}' Selected>{$group->get_name()}</option>" ;
+                                    }
+                                    else
+                                        {
+                                        echo "<option value='{$group->get_id()}'>{$group->get_name()}</option>";
                                     }
                                 }
                             }

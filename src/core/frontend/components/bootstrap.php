@@ -10,4 +10,7 @@ use core\backend\database\dataset;
  * @Website https://Blackoutzz.me
  **/
 
-class bootstrap extends npm
+class bootstrap extends npm 
+{
+    
+}

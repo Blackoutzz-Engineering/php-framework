@@ -4657,8 +4657,10 @@ class model extends database_model
                 $user_group = $this->get_parsed_id($puser_group);
                 $controller_view = $this->get_parsed_id($pcontroller_view);
                 if($user_group == 0) $user_group = $this->get_parsed_id($this->get_user_group_by_name($puser_group));
-                if($controller_view == 0 && is_string($pcontroller_view)){
-                    if(sregex::is_controller_view($pcontroller_view)){
+                if($controller_view == 0 && is_string($pcontroller_view))
+                {
+                    if(sregex::is_controller_view($pcontroller_view))
+                    {
                         $controller_n_view = explode("/",$pcontroller_view);
                         $controller_view = $this->get_parsed_id($this->get_controller_view_by_controller_and_view($controller_n_view[0],$controller_n_view[1]));
                     }
@@ -4671,7 +4673,10 @@ class model extends database_model
                         "granted" => $pgranted
                     );
                     $new_user_group_controller_view = new user_group_controller_view($pdata);
-                    if($new_user_group_controller_view->save()) $new_user_group_controller_view;
+                    if($new_user_group_controller_view->save())
+                    {
+                        return $new_user_group_controller_view;
+                    }
                 }
                 throw new exception("Something went wrong with the query from the model");
             }

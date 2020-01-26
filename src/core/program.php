@@ -196,6 +196,16 @@ abstract class program
         return extension_loaded('xdebug');
     }
 
+    static public function is_running_production_mode() : bool
+    {
+        return (self::$runtime == runtime_type::prod);   
+    }
+
+    static public function is_running_dev_mode() : bool
+    {
+        return (self::$runtime == runtime_type::dev);   
+    }
+
     static public function get_plugins()
     {
         return self::$plugins;

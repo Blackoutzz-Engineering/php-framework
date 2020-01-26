@@ -1,4 +1,6 @@
-<?php $group = $this->get_data("group"); ?>
+<?php $group = $this->get_data("group");
+use core\backend\database\dataset_array;
+?>
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">
@@ -72,11 +74,11 @@
                     </thead>
                     <tbody>
                         <?php
-                        if($group->get_options() == array()){
+                        if($group->get_options() instanceof dataset_array){
                             foreach($group->get_options() as $group_option){
                                 echo '<tr>';
                                 echo '<th scope="row">'.$group_option->get_option()->get_name().'</th>';
-                                echo '<td><input type="text" value="'.$group_option->get_value().'"/></td>';
+                                echo '<th scope="row">'.$group_option->get_value().'</th>';
                                 echo '</tr>';
                             }
                         } else {
@@ -93,7 +95,7 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold text-primary">
-                <i class="fa fa-desktop"></i> <?php $group->name; ?>'s Pages
+                <i class="fa fa-sliders-v-square"></i><?php echo $group->name; ?>'s Pages
             </h6>
             <button class="btn btn-primary" data-toggle="modal" data-target="#new-page">
                 <i class="fa fa-plus"></i>
@@ -124,7 +126,6 @@
                         } else {
                             echo("<div> <i class='fa fa-info-circle'></i> No page access found for this group.</div>");
                         }
-
                         ?>
                     </tbody>
                 </table>
