@@ -42,6 +42,7 @@ class menu extends widget
         $buttons = [];
         $categories = [];
         $last_category ??= "";
+        $menu_id = 0;
         foreach($this->buttons as $button)
         {
             $category = $button->get_category();
@@ -53,11 +54,11 @@ class menu extends widget
                 {
                     $categories[] = [
                         new li(["class"=>"nav-item"],[
-                            new a(["class"=>"nav-link collapse","href"=>"#","data-toggle"=>"collapse","data-target"=>"#collapsePages","aria-expanded"=>"false", "aria-controls"=>"collapsePages"],[
+                            new a(["class"=>"nav-link collapsed","href"=>"#","data-toggle"=>"collapse","data-target"=>"#collapseMenu".++$menu_id,"aria-expanded"=>"false", "aria-controls"=>"collapsePages"],[
                                 new i(["class"=>"fas fa-fw fa-folder"]),
-                                new span([],[$category->get_name()])
+                                new span([],$last_category)
                             ]),
-                            new div(["id"=>"collapsePages","class"=>"collapse","aria-labelledby"=>"headingPages","data-parent"=>"#accordionSidebar"],
+                            new div(["id"=>"collapseMenu".$menu_id,"class"=>"collapse","aria-labelledby"=>"headingPages","data-parent"=>"#accordionSidebar"],
                                 new div(["class"=>"bg-white py-2 collapse-inner rounded"],$buttons)
                             )
                         ])
@@ -72,11 +73,11 @@ class menu extends widget
         {
             $categories[] = [
                 new li(["class"=>"nav-item"],[
-                    new a(["class"=>"nav-link collapsed","href"=>"#","data-toggle"=>"collapse","data-target"=>"#collapsePages","aria-expanded"=>"false", "aria-controls"=>"collapsePages"],[
+                    new a(["class"=>"nav-link collapsed","href"=>"#","data-toggle"=>"collapse","data-target"=>"#collapseMenu".++$menu_id,"aria-expanded"=>"false", "aria-controls"=>"collapsePages"],[
                         new i(["class"=>"fas fa-fw fa-folder"]),
-                        new span([],"$last_category")
+                        new span([],$last_category)
                     ]),
-                    new div(["id"=>"collapsePages","class"=>"collapse","aria-labelledby"=>"headingPages","data-parent"=>"#accordionSidebar"],
+                    new div(["id"=>"collapseMenu".$menu_id,"class"=>"collapse","aria-labelledby"=>"headingPages","data-parent"=>"#accordionSidebar"],
                         new div(["class"=>"bg-white py-2 collapse-inner rounded"],$buttons)
                     )
                 ])
