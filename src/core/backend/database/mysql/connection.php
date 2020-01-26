@@ -219,6 +219,7 @@ class connection extends database_connection
         }
         catch (exception $e)
         {
+            var_dump($e);
             return false;
         }
     }

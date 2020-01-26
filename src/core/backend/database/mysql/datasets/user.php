@@ -2,6 +2,7 @@
 namespace core\backend\database\mysql\datasets;
 use core\backend\database\mysql\dataset;
 use core\backend\database\mysql\model;
+use core\common\components\time\date;
 use core\program;
 use core\common\exception;
 
@@ -20,21 +21,15 @@ class user extends dataset
 
     protected $last_update;
 
+    protected $creation_date;
+
     public  function save($pid = 0)
     {
         if($this->exist())
         {
-            return $this->execute_prepared_update_query(
-                "UPDATE `users` SET name=? , password=? , email=? , group=? , state=? WHERE id=?",
+            return $this->execute_prepared_update_query("UPDATE `users` SET name=? , password=? , email=? , state=? , users.group=?  where id=?",
                 "sssiii",
-                array($this->name,
-                    $this->password,
-                    $this->email,
-                    $this->group,
-                    $this->state,
-                    $this->id
-                ),
-                $pid);
+                array($this->name,$this->password,$this->email,$this->state,$this->group,$this->id),$pid);
         }
         else
         {
@@ -212,7 +207,7 @@ class user extends dataset
 
     public function get_last_update()
     {
-        return $this->last_update;
+        return new date($this->last_update);
     }
 
     // Client
@@ -244,6 +239,11 @@ class user extends dataset
             return false;
         }
 	}
+
+    public function get_creation_date()
+    {
+        return new date($this->creation_date);
+    }
 
     public function has_access()
     {

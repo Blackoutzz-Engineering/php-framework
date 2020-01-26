@@ -46,7 +46,7 @@ class secured_ajax extends controller
         return new controller_view($this->reference,$this->view_data);
     }
 
-    protected function is_authenticated()()
+    protected function is_authenticated()
     {
         $is_login = parent::is_authenticated();
         if(isset($_REQUEST["user-token"]))

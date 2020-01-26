@@ -16,4 +16,9 @@ class root extends ajax
         return false;
     }
 
+    public function get_test()
+    {
+        return null;
+    }
+
 }

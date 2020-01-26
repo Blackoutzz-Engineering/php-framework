@@ -44,14 +44,13 @@ class admin extends ajax
                     'Your credentials :'."\n\n".'Username : '.$user->get_name()."\n".'Secure Password : '.$password."\n\n".
                     'Best Regards, The almighty blackoutzz framework.';
                     $headers = 'From: noreply'."\r\n";
-//                    To review in the future
-                    mail($_REQUEST["email"], $subject, $message, $headers);
-                    return true;
+                    return mail($_REQUEST["email"], $subject, $message, $headers);
                 }
             }
         }
         return false;
     }
+
 //  reviewed and not working for now
     public function add_reset_user_password()
     {
@@ -72,8 +71,7 @@ class admin extends ajax
                         'Your credentials has been reset :'."\n\n".'Username : '.$user->name."\n".'Secure Password : '.$password."\n\n".
                         'Best Regards, The almighty blackoutzz framework.';
                         $headers = 'From: noreply'."\r\n";
-                        mail($user->email, $subject, $message, $headers);
-                        return true;
+                        return mail($user->email, $subject, $message, $headers);
                     }
                 }
             }

@@ -25,7 +25,7 @@ class widget extends dataset
                 {
                     $html .= $this->get_html_array($element);
                 } 
-                else
+                else 
                 {
                     $html .= $element."\n";
                 }
