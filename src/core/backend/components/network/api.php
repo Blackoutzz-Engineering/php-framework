@@ -18,8 +18,6 @@ use core\backend\network\curl\request_result;
 class api extends curl
 {
 
-    protected $curl;
-
     protected $url;
 
     protected $key;
