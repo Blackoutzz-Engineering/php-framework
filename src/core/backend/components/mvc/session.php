@@ -58,8 +58,9 @@ class session extends dataset_array
 
     protected function set_default_value()
     {
-        session_reset();
+        $this->array = [];
         $this->save();
+        return session_reset();
     }
 
     protected function save()
@@ -74,13 +75,13 @@ class session extends dataset_array
 
     public function reset()
     {
-        session_regenerate_id(true);
         $this->set_default_value();
+        return session_regenerate_id(true);
     }
 
     public function destroy()
     {
-        session_destroy();
+        return session_destroy();
     }
 
     public function has_user()
