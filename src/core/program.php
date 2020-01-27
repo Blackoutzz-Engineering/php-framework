@@ -66,7 +66,7 @@ abstract class program
     static public function end($pcode = 200)
     {
         http_response_code(intval($pcode));
-        self::push();
+        ob_end_flush();
         die();
     }
 

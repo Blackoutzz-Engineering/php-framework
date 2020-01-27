@@ -1,6 +1,7 @@
 <?php
 namespace controllers\ajax;
 use core\backend\components\mvc\controllers\ajax;
+use core\program;
 
 class root extends ajax
 {
@@ -19,6 +20,11 @@ class root extends ajax
     public function get_test()
     {
         return null;
+    }
+
+    public function get_logout()
+    {
+        return program::$session->destroy();
     }
 
 }

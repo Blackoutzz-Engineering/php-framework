@@ -15,8 +15,7 @@ class root extends page
 
     public function index()
     {
-        $this->send(program::$users[0],"user");
-        $this->send(program::$session,"session");
+        
     }
 
     public function dashboard()
@@ -26,7 +25,7 @@ class root extends page
 
     public function login()
     {
-
+        if($this->user->is_authenticated()) $this->redirect("/");
     }
 
     public function forgot()

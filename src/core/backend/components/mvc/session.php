@@ -60,7 +60,6 @@ class session extends dataset_array
     {
         $this->array = [];
         $this->save();
-        return session_reset();
     }
 
     protected function save()
@@ -71,12 +70,6 @@ class session extends dataset_array
     protected function restore()
     {
         $this->array = $_SESSION;
-    }
-
-    public function reset()
-    {
-        $this->set_default_value();
-        return session_regenerate_id(true);
     }
 
     public function destroy()
