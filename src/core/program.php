@@ -66,13 +66,26 @@ abstract class program
     static public function end($pcode = 200)
     {
         http_response_code(intval($pcode));
-        ob_end_flush();
+        while (ob_get_level() > 1) ob_end_flush();
+        $last_buffer = ob_get_level();
+        $length = $last_buffer ? ob_get_length() : 0;
+        header("Content-Length: {$length}");
+        header('Connection: close');
+        if ($last_buffer) ob_end_flush();
+        flush();
         die();
     }
 
     static public function abort($pcode = 500)
     {
         http_response_code(intval($pcode));
+        while (ob_get_level() > 1) ob_end_flush();
+        $last_buffer = ob_get_level();
+        $length = $last_buffer ? ob_get_length() : 0;
+        header("Content-Length: {$length}");
+        header('Connection: close');
+        if ($last_buffer) ob_end_flush();
+        flush();
         die();
     }
 
