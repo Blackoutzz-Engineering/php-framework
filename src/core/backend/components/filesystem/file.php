@@ -47,11 +47,6 @@ class file
         return static_file::get_name($this->filepath);
     }
 
-    public function get_type()
-    {
-        return static_file::get_type($this->filepath);
-    }
-
     public function get_folder()
     {
         return static_file::get_folder($this->filepath);
@@ -167,12 +162,12 @@ class file
         return static_file::get_extension_type($this->filepath);
     }
 
-    public function get_file_type()
+    public function get_type()
     {
         return static_file::get_type($this->filepath);
     }
 
-    public function get_file_mime_type()
+    public function get_mime_type()
     {
         return static_file::get_mime_type($this->filepath);
     }
