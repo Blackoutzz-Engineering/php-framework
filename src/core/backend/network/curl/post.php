@@ -22,8 +22,6 @@ class post
 
     protected $type;
 
-    protected $mime_type;
-
     public function __construct($pheader,$ptype = curl_post_type::post)
     {
         $this->type = $ptype;
@@ -33,28 +31,8 @@ class post
             {
                 $this->key = $array[1];
                 $this->value = $array[2];
-                if(preg_match("~^[\.\/\\\\A-z\_\-0-9].*$~mi",$this->value) || preg_match("~^.*(?:file|upload|fileupload|file_upload|_upload|files|\[file\]|\[files\])$~mi",$this->key))
-                {
-                    if(!preg_match("~^http.*$~mi",$this->value)
-                    && !preg_match("~\/?\.\.\/\.\.\/.+~mi",urldecode($this->value))
-                    && !preg_match("~^[0-9]+$~mi",urldecode($this->value))
-                    && !preg_match("~^[A-z]+$~mi",urldecode($this->value))
-                    && !preg_match("~^\/wp-content\/.+$~mi",urldecode($this->value))
-                    && preg_match("~^@?\.?\/?(?:[^\s\t\r]|\\\\[\s\t\r])+$~mi",$this->value))
-                    {
-                        $this->type = post_type::file;
-                        if(preg_match("~^([^;]+);[\s\t\r]*type=([^\s\t\r]*)[\s\t\r]*$~im",$this->value,$mime_type)){
-                            $this->value = $mime_type[1];
-                            if(isset($mime_type[2]))
-                                $this->mime_type = $mime_type[2];
-                            else
-                                $this->mime_type = mime_content_type($mime_type[1]);
-                        } else {
-                            $this->mime_type = mime_content_type($this->value);
-                        }
-                    }
-                }
-            } else
+            } 
+            else
             {
                 $this->key = "";
                 $this->value = $pheader;

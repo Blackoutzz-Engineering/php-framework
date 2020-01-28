@@ -523,7 +523,7 @@ abstract class file
             }
             elseif(self::exist($filepath))
             {
-                if(self::rename($filepath,$new_filepath))
+                if(rename($filepath,$new_filepath))
                 {
                     return true;
                 } else {
