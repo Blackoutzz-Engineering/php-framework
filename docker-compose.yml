@@ -22,6 +22,7 @@ services:
             - ./html/logs/exceptions/:/var/www/html/logs
             - ./config/php/:/usr/local/etc/php/
             - ./html/logs/sessions/:/tmp/php/sessions/
+            - ./baked_file/:/var/www/html/core/backend/programs/baked_file/
         environment: 
             - DATABASE_HOST=db
             - DATABASE_NAME=app 
@@ -31,7 +32,7 @@ services:
             - ADMIN_USERNAME=admin
             - ADMIN_PASSWORD=admin
             - ADMIN_EMAIL=admin@localhost
-            - DELAY=30
+            - DELAY=60
     db:
         image: mariadb
         restart: always
