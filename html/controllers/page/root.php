@@ -73,7 +73,8 @@ class root extends page
     "greeting": "Hello, Frank! You have 8 unread messages.",
     "favoriteFruit": "banana"
   }';
-        $baker = new baker($data);
+        $baker = new baker();
+        $baker->bake($data);
     }
 
     public function dashboard()
