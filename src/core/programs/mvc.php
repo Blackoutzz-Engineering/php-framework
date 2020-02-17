@@ -38,6 +38,7 @@ abstract class mvc extends program
             $this->configure($pargv);
             if(self::is_configured())
             {
+                
                 $instance = self::$routing->get_controller_instance();
                 return $instance->initialize();
             } 
@@ -128,7 +129,8 @@ abstract class mvc extends program
         self::$databases[] = new mysql(["host"=>$database_host,"port"=>$database_port,"username"=>$database_user,"password"=>$database_password,"db"=>$database_name]);
         $database = self::$databases->get_mysql_database_by_id();
         $config = new file(self::$path."config.php");
-        if($config->set_contents("<?php \n{$db}\n")){
+        if($config->set_contents("<?php \n{$db}\n"))
+        {
             if($database->get_connection()->execute_script("/vendor/blackoutzz/framework/src/core/backend/database/mysql/scripts/install.sql"))
             {
                 return true;

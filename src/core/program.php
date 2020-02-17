@@ -27,8 +27,6 @@ define('CRLF',"\r\n");
 abstract class program
 {
 
-    static  $debug;
-
     static  $users;
 
     static  $cryptography;
@@ -37,7 +35,7 @@ abstract class program
 
     static  $routing;
 
-    static  $path = "./";
+    static  $path = "../";
 
     static  $plugins = array();
 
@@ -45,6 +43,8 @@ abstract class program
 
     static  $session;
 
+    static  $verbose;
+    
     public function __construct($pargv = array())
     {
         self::runtime(self::$runtime);
@@ -94,7 +94,7 @@ abstract class program
     static public function runtime($pruntime_type = runtime_type::dev) : void
     {
         self::$debug = intval(self::is_configured());
-        $local_core = new folder(self::$path."core",false);
+        $local_core  = new folder(self::$path."core",false);
         if($local_core->exist()) $local_core->import(true);
         ob_start();
         ini_set ("memory_limit",'1024M');
@@ -157,25 +157,6 @@ abstract class program
         http_response_code(301);
         die();
     }
-
-    static public function start_session() : bool
-    {
-        if(session_status() == PHP_SESSION_ACTIVE) return true;
-        session_start();
-        if(session_status() == PHP_SESSION_ACTIVE) return true;
-        return false;
-    }
-
-    static public function reset_session() : bool
-    {
-        if(session_status() == PHP_SESSION_ACTIVE)
-        {
-            $_SESSION = array();
-            return true;
-        } else {
-            return self::start_session();
-        }
-    }
     
     static public function is_configured() : bool 
     {
@@ -214,8 +195,6 @@ abstract class program
 
     protected function configure($pargv)
     {
-        if(isset($pargv["setup"])) self::$configured = $pargv["setup"];
-        //if(isset($pargv["database"])) self::$databases["mysql"] = new mysql($pargv["database"]);
         if(isset($pargv["salt"]) && isset($pargv["algo"])) self::$cryptography = new cryptography(array("algo"=>$pargv["algo"],"salt"=>$pargv["salt"]));
     }
 

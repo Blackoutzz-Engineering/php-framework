@@ -45,8 +45,10 @@ function page_ready() {
             url: '/ajax/admin/plugins/uninstall/' + slug + '/',
             type: 'POST',
             data: { 'validation_nonce': user_nonce, 'slug': slug },
-            success: function (result) {
-                if (result) {
+            success: function (result) 
+            {
+                if (result) 
+                {
                     $("div#plugins-callback").removeClass("hidden");
                     $("div#plugins-callback").removeClass("danger");
                     $("div#plugins-callback").removeClass("warning");

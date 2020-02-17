@@ -19,7 +19,7 @@ use core\common\str;
 
 class admin extends ajax
 {
-//  reviewed tested
+
     public function get_users()
     {
         $model = $this->databases->get_mysql_database_by_id()->get_model();
@@ -28,7 +28,7 @@ class admin extends ajax
 //        $this->load_tab("users");
         return true;
     }
-//  Reviewed tested
+
     public function add_user()
     {
         if(isset($_REQUEST["email"]) && isset($_REQUEST["username"]) && isset($_REQUEST["group"]))
@@ -51,7 +51,6 @@ class admin extends ajax
         return false;
     }
 
-//  reviewed and not working for now
     public function add_reset_user_password()
     {
         $id = intval($_REQUEST["id"]);
@@ -78,7 +77,7 @@ class admin extends ajax
         }
         return false;
     }
-// reviewed tested
+
     public function add_user_group()
     {
         $name = (string) $_REQUEST["name"];
@@ -92,7 +91,7 @@ class admin extends ajax
         }
         return false;
     }
-// reviewed tested
+
     public function add_user_group_controller_view()
     {
         if(isset($_REQUEST["group"]) && isset($_REQUEST["page"]))
@@ -105,7 +104,7 @@ class admin extends ajax
         }
         return false;
     }
-// reviewed tested
+
     public function add_user_group_option()
     {
         if(isset($_REQUEST["group"]) && isset($_REQUEST["option"]) && isset($_REQUEST["value"]))
@@ -119,20 +118,23 @@ class admin extends ajax
         }
         return false;
     }
-// reviewed tested
+
     public function add_user_group_permission()
     {
-        if(isset($_REQUEST["group"]) && isset($_REQUEST["permission"]))
+        if($this->user->can("Admin Access"))
         {
-            $model = $this->databases->get_mysql_database_by_id()->get_model();
-            if($model->create_user_group_permission($_REQUEST["group"],$_REQUEST["permission"],1))
+            if(isset($_REQUEST["group"]) && isset($_REQUEST["permission"]))
             {
-                return true;
+                $model = $this->databases->get_mysql_database_by_id()->get_model();
+                if($model->create_user_group_permission($_REQUEST["group"],$_REQUEST["permission"],1))
+                {
+                    return true;
+                }
             }
         }
         return false;
     }
-// reviewed tested
+
     public function add_permission()
     {
         $name = (string) $_REQUEST["name"];
@@ -146,7 +148,24 @@ class admin extends ajax
         }
         return false;
     }
-//    lets not touch it for now
+
+    public function add_permission_controller_view()
+    {
+        $name = (string) $_REQUEST["name"];
+        if($this->user->can("Admin Access"))
+        {
+            if(isset($_REQUEST["group"]) && isset($_REQUEST["permission"]))
+            {
+                $model = $this->databases->get_mysql_database_by_id()->get_model();
+                if($model->create_permission_controller_view($_REQUEST["permission"],$_REQUEST["page"],1))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public function add_plugins()
     {
 //        $model = $this->databases->get_mysql_database_by_id()->get_model();
@@ -164,7 +183,7 @@ class admin extends ajax
         }
         return false;
     }
-//    lets not touch it for now
+
     public function delete_plugins()
     {
         if($this->is_slug($_REQUEST["slug"]))
