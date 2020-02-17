@@ -17,62 +17,27 @@ class root extends page
     public function index()
     {
         $data = '{
-    "_id": "5e40cd17b4b392e0f6bc5c39",
-    "index": 0,
-    "guid": "bd1d29e6-c1d7-4666-98fd-e286ad5d02a9",
-    "isActive": true,
-    "balance": "$2,443.49",
-    "picture": "http://placehold.it/32x32",
-    "age": 27,
-    "eyeColor": "green",
-    "name": {
-      "first": "Frank",
-      "last": "Wiggins"
-    },
-    "company": "ACIUM",
-    "email": "frank.wiggins@acium.org",
-    "phone": "+1 (906) 600-2952",
-    "address": "244 Dahlgreen Place, Salunga, Wisconsin, 2282",
-    "about": "Proident voluptate culpa ad quis elit velit nostrud. Ullamco voluptate ipsum do laboris aliquip labore anim tempor officia culpa ut ex eu anim. Magna laborum voluptate consequat eu Lorem nisi laboris eu ad ad. Tempor irure fugiat elit eiusmod mollit. Commodo quis labore eu reprehenderit aute occaecat aliqua enim pariatur ea sunt. Fugiat laborum qui nulla enim sit ullamco ad eu occaecat. Eu sit sunt exercitation Lorem.",
-    "registered": "Saturday, July 16, 2016 2:07 AM",
-    "latitude": "-46.394566",
-    "longitude": "161.714067",
-    "tags": [
-      "ad",
-      "minim",
-      "cupidatat",
-      "non",
-      "laborum"
+  "country": {
+    "ourselves": 1901158348.1211357,
+    "word": -1712292144.1919456,
+    "activity": "minute",
+    "nodded": [
+      false,
+      "chemical",
+      false,
+      false,
+      241893407.61943674,
+      -769201832.7926388
     ],
-    "range": [
-      0,
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9
-    ],
-    "friends": [
-      {
-        "id": 0,
-        "name": "Sanders Vang"
-      },
-      {
-        "id": 1,
-        "name": "Allyson Cleveland"
-      },
-      {
-        "id": 2,
-        "name": "Shawn Mckinney"
-      }
-    ],
-    "greeting": "Hello, Frank! You have 8 unread messages.",
-    "favoriteFruit": "banana"
-  }';
+    "silver": -207547456,
+    "him": -1927448075.3005161
+  },
+  "after": -1017310852.7010589,
+  "trade": "busy",
+  "village": false,
+  "distance": -1510140017.4940476,
+  "find": true
+}';
         $baker = new baker();
         $baker->bake($data);
     }

@@ -111,18 +111,23 @@ class baker
           {
               if(is_object($data[0]))
               {
-                  $class_variables.=$this->format_variable($name, new \stdClass());
-                  $class_functions.=$this->format_get_function($name,"objects","");
-                  $class_header.=$this->format_uses($name);
-                  $this->parse_root_object($data[0],$name);
+                  $class_variables.=$this->format_variable($pclass_name."_".$name, new \stdClass());
+                  $class_functions.=$this->format_get_function($pclass_name."_".$name,"objects","");
+                  $class_header.=$this->format_uses($pclass_name."_".$name);
+                  $this->parse_root_object($data[0],$pclass_name."_".$name);
+              }
+              else
+              {
+                  $class_variables.=$this->format_variable($name,array());
+                  $class_functions.=$this->format_get_function($name,"normal","");
               }
           }
           elseif (is_object($data))
           {
-              $class_variables.=$this->format_variable($name,$data);
-              $class_functions.=$this->format_get_function($name,"object","");
-              $class_header.=$this->format_uses($name);
-              $this->parse_root_object($data,$name);
+              $class_variables.=$this->format_variable($pclass_name."_".$name,$data);
+              $class_functions.=$this->format_get_function($pclass_name."_".$name,"object","");
+              $class_header.=$this->format_uses($pclass_name."_".$name);
+              $this->parse_root_object($data,$pclass_name."_".$name);
           }
           else
           {
@@ -140,7 +145,6 @@ class baker
 
   public function create_class_file($pclass_name)
   {
-    $class = new file(program::$path.'/core/backend/programs/baked_file/'.$pclass_name.'.php');
-    return $class;
+    return new file(program::$path.'/core/backend/programs/baked_file/'.$pclass_name.'.php');
   }
 }
