@@ -1944,6 +1944,37 @@ class model extends database_model
         }
     }
 
+    public function get_permission_controller_views_by_permission($ppermission,$pmax = 100,$ppage = 1)
+    {
+        try
+        {
+            if($this->get_connection()->is_connected())
+            {
+                if(is_string($ppermission)) $ppermission = $this->get_permission_by_name($ppermission);
+                $permission = $this->get_parsed_id($ppermission);
+                if($permission)
+                {
+                    $permission_controller_views = new dataset_array();
+                    $offset = $this->get_query_offset($pmax,$ppage);
+                    if($data = $this->get_connection()->get_prepared_select_query("SELECT * FROM `permission_controller_views` WHERE permission=? LIMIT ? OFFSET ?","iii",array($permission,$pmax,$offset)))
+                    {
+                        foreach($data as $pdata)
+                        {
+                            $permission_controller_views[] = new permission_controller_view($pdata);
+                        }
+                        return $permission_controller_views;
+                    }
+                }
+                throw new exception("Something went wrong with the query from the model");
+            }
+            throw new exception("Model couldn't connect to the database");
+        } 
+        catch(exception $e)
+        {
+            return new dataset_array();
+        }
+    }
+
     public function get_permission_controller_views_by_user_and_group_and_granted($puser,$pgroup,$pgranted = 1)
     {
         try

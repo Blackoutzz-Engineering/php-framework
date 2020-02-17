@@ -40,4 +40,9 @@ class permission extends dataset
         $this->description = $this->get_sanitized_string($pdescription);
     }
 
+    public function get_controller_views()
+    {
+        return $this->database()->get_model()->get_permission_controller_views_by_permission($this->id);
+    }
+
 }
