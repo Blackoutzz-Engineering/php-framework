@@ -87,7 +87,7 @@ class baker
     {
         $file_content = "";
         $base_comment="\t// type : ";
-        $base_variable_string = "\tprotected ";
+        $base_variable_string = "\tprotected \$";
 
         $file_content.=$base_comment.gettype($pdata)."\n";
         $file_content.= $base_variable_string.$pvariable_name.";\n";
