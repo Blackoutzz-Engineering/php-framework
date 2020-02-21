@@ -4,7 +4,6 @@ services:
         build:
             context: .
             dockerfile: dockerfile
-        restart: always
         network_mode: bridge
         ports:
             - 80:80
@@ -14,14 +13,13 @@ services:
         links: 
             - db
         volumes:
-            - ./src/:/var/www/html/vendor/blackoutzz/framework/src/
-            - ./html/controllers/:/var/www/html/controllers/
-            - ./html/ui/:/var/www/html/ui/
-            - ./html/assets/:/var/www/html/assets/
-            - ./html/logs/apache/:/var/log/apache2/
-            - ./html/logs/exceptions/:/var/www/html/logs
+            - ./src/:/var/www/vendor/blackoutzz/framework/src/
+            - ./app/controllers/:/var/www/controllers/
+            - ./app/ui/:/var/www/ui/
+            - ./app/assets/:/var/www/assets/
+            - ./app/logs/apache/:/var/log/apache2/
             - ./config/php/:/usr/local/etc/php/
-            - ./html/logs/sessions/:/tmp/php/sessions/
+            - ./app/logs/sessions/:/tmp/php/sessions/
         environment: 
             - DATABASE_HOST=db
             - DATABASE_NAME=app 
@@ -34,7 +32,6 @@ services:
             - DELAY=30
     db:
         image: mariadb
-        restart: always
         network_mode: bridge
         ports:
             - 3306:3306

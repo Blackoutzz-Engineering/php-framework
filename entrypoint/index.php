@@ -1,6 +1,8 @@
 <?php
-require('../vendor/autoload.php');
-require('../main.php');
+require("/var/www/vendor/autoload.php");
+require('/var/www/main.php');
+
+
 if(file_exists(framework\main::$path."config.php"))
 {
     include(framework\main::$path."config.php");

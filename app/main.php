@@ -16,7 +16,6 @@ class main extends mvc
 
     public function __construct($pargv = array())
     {
-        self::$path = "../";
         parent::__construct($pargv);
     }
 

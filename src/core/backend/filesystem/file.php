@@ -32,16 +32,37 @@ abstract class file
                 if(preg_match("~^\.[\\\\\/].*$~im",$new_filepath[1]))
                     return $new_filepath[1];
                 else
-                    return ".".DIRECTORY_SEPARATOR.$new_filepath[1];
+                {
+                    if(is_file(".".DIRECTORY_SEPARATOR.$new_filepath[1]))
+                    {
+                        return ".".DIRECTORY_SEPARATOR.$new_filepath[1];
+                    } 
+                    elseif(is_file(DIRECTORY_SEPARATOR.$new_filepath[1]))
+                    {
+                        return DIRECTORY_SEPARATOR.$new_filepath[1];
+                    }
+                }
             }
-            if(preg_match("~^(?:\.?[\\\\\/]|[\\\\\/]?)(.+)[\\\\\/]?$~im",$filepath,$new_filepath))
+            elseif(preg_match("~^(?:\.?[\\\\\/]|[\\\\\/]?)(.+)[\\\\\/]?$~im",$filepath,$new_filepath))
             {
                 if(preg_match("~^[A-Za-z]\:[\\\\].*~im",$new_filepath[1]))
                     return $new_filepath[1];
                 if(preg_match("~^\.[\\\\\/].*$~im",$new_filepath[1]))
+                {
                     return $new_filepath[1];
+                }
                 else
-                    return ".".DIRECTORY_SEPARATOR.$new_filepath[1];
+                {
+                    if(is_file(".".DIRECTORY_SEPARATOR.$new_filepath[1]))
+                    {
+                        return ".".DIRECTORY_SEPARATOR.$new_filepath[1];
+                    } 
+                    elseif(is_file(DIRECTORY_SEPARATOR.$new_filepath[1]))
+                    {
+                        return DIRECTORY_SEPARATOR.$new_filepath[1];
+                    }
+                }
+                    
             }
             throw new exception("File pattern not found for {$filepath}");
         }

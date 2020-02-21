@@ -35,7 +35,7 @@ abstract class program
 
     static  $routing;
 
-    static  $path = "../";
+    static  $path = "/var/www/";
 
     static  $plugins = array();
 
@@ -43,7 +43,7 @@ abstract class program
 
     static  $session;
 
-    static  $verbose;
+    static  $debug;
     
     public function __construct($pargv = array())
     {

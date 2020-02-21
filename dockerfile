@@ -6,15 +6,18 @@ RUN docker-php-ext-install mysqli
 RUN docker-php-ext-install curl
 RUN apt-get install -y sendmail sendmail-bin
 RUN a2enmod rewrite
+
 copy ./run.sh /
-copy ./frontend /var/www/html
-copy ./html /var/www/
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+copy ./entrypoint/ /var/www/html
+copy ./app /var/www/
 WORKDIR /var/www/
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install
 RUN rm /usr/local/bin/composer
 RUN rm composer.json
 RUN rm composer.lock
+
 RUN chown -R www-data:www-data /var/www/
 RUN chmod +X /run.sh
 RUN chmod 775 /run.sh
