@@ -20,7 +20,7 @@
                         foreach($this->get_data("permissions") as $permission)
                         {
                             echo "<tr id='{$permission->id}'>";
-                            echo "  <td>{$permission->name}</td>";
+                            echo "  <td><a href='/admin/permission/{$permission->id}'>{$permission->name}</a></td>";
                             echo "  <td>".$permission->get_description()."</td>";
                             echo "</tr>";
             }

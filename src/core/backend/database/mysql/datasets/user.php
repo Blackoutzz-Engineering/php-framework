@@ -124,7 +124,7 @@ class user extends dataset
 
     public  function get_permissions()
     {
-        return $this->database()->get_model()->get_user_permission_by_user($this);
+        return $this->database()->get_model()->get_user_permissions_by_user($this);
     }
 
     public  function add_permission($ppermission,$pgranted)
@@ -157,7 +157,7 @@ class user extends dataset
 
     public function get_options()
     {
-        return $this->database()->get_model()->get_user_option_by_user($this);
+        return $this->database()->get_model()->get_user_options_by_user($this);
     }
 
     public function set_option($poption,$pvalue)

@@ -1,20 +1,20 @@
 ﻿$(document).ready(function () {
 
     $("button#add-permission").on("click", function () {
-        if ($("select#NewGroupPermission").val() != "") {
+        if ($("select#NewUserPermission").val() != "") {
             $.ajax({
-                url: '/ajax/admin/user_group_permission',
+                url: '/ajax/admin/user_permission',
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    'group': $("input#group-id").val(),
-                    'permission': $("select#NewGroupPermission").val()
+                    'user': $("input#user-id").val(),
+                    'permission': $("select#NewUserPermission").val()
                 },
                 success: function (response)
                 {
                     if (response.value == true)
                     {
-                        alert("New group permission Created.");
+                        alert("New user permission Created.");
                         location.reload();
                     }
                     else
@@ -27,15 +27,15 @@
     });
 
     $("button#add-option").on("click", function () {
-        if ($("select#NewGroupOption").val() != "" && $("input#NewGroupOptionValue").val() != "") {
+        if ($("select#NewUserOption").val() != "" && $("input#NewUserOptionValue").val() != "") {
             $.ajax({
-                url: '/ajax/admin/user_group_option',
+                url: '/ajax/admin/user_option',
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    'group': $("input#group-id").val(),
-                    'option': $("select#NewGroupOption").val(),
-                    'value': $("input#NewGroupOptionValue").val()
+                    'user': $("input#user-id").val(),
+                    'option': $("select#NewUserOption").val(),
+                    'value': $("input#NewUserOptionValue").val()
                 },
                 success: function (response)
                 {
@@ -54,14 +54,15 @@
     });
 
     $("button#add-page").on("click", function () {
-        if ($("select#NewGroupPage").val() != "") {
+        if ($("select#NewUserPage").val() != "") {
             $.ajax({
-                url: '/ajax/admin/user_group_controller_view',
+                url: '/ajax/admin/user_controller_view',
                 type: 'POST',
                 dataType: 'json',
-                data:{
-                    'group': $("input#group-id").val(),
-                    'page': $("select#NewGroupPage").val()
+                data:
+                {
+                    'user': $("input#user-id").val(),
+                    'page': $("select#NewUserPage").val()
                 },
                 success: function (response)
                 {
@@ -79,12 +80,12 @@
         }
     });
 
-    $("i[name='user_group_controller_view']").on("click", function () {
+    $("i[name='user_controller_view']").on("click", function () {
         var id = $(this).attr("id");
         var button = $(this);
         var status = button.hasClass("fa-toggle-on");
         $.ajax({
-            url: '/ajax/admin/user_group_controller_view/'+id,
+            url: '/ajax/admin/user_controller_view/'+id,
             type: 'PUT',
             dataType: 'json',
             data: { 
@@ -113,12 +114,12 @@
         });
     });
     
-    $("i[name='user_group_permission']").on("click", function () {
+    $("i[name='user_permission']").on("click", function () {
         var id = $(this).attr("id");
         var button = $(this);
         var status = button.hasClass("fa-toggle-on");
         $.ajax({
-            url: '/ajax/admin/user_group_permission/'+id,
+            url: '/ajax/admin/user_permission/'+id,
             type: 'PUT',
             dataType: 'json',
             data: { 

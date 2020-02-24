@@ -26,7 +26,7 @@
                     {
                         echo "<tr>";
                         echo "  <td>".$this->get_widget("gravatar",["email"=>$user->email,"username"=>$user->username])."</td>";
-                        echo "  <td>{$user->name}</td>";
+                        echo "  <td><a href='/admin/user/{$user->id}/'>{$user->name}</a></td>";
                         echo "  <td>{$user->email}</td>";
                         echo "  <td>{$user->group}</td>";
                         echo "  <td> <button id=\"reset\" type=\"button\" data-id='{$user->id}' class=\"btn btn-primary\">Reset password</button> </td>";

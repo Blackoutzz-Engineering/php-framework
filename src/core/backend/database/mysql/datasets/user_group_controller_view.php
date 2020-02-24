@@ -84,5 +84,10 @@ class user_group_controller_view extends dataset
         return ($this->granted >= 1 || $this->granted === true);
     }
 
+    public function is_granted()
+    {
+        return ($this->granted);
+    }
+
 }
 

@@ -77,9 +77,17 @@ class admin extends page
         $this->send($this->databases->get_mysql_database_by_id()->get_model()->get_permissions(),"permissions");
     }
 
-    public function permission()
+    public function permission($pid = 0)
     {
-
+        $id = intval($pid);
+        if($id)
+        {
+            $this->send($this->databases->get_mysql_database_by_id()->get_model()->get_permission_by_id($id),"permission");
+            $this->send($this->databases->get_mysql_database_by_id()->get_model()->get_controller_views(200),"pages");
+        } else {
+            $this->redirect("/admin/permissions");
+        }
+        
     }
 
     public function users()
@@ -89,9 +97,33 @@ class admin extends page
         $this->send($users_model->get_user_groups(),"groups");
     }
 
-    public function user()
+    public function user($pname)
     {
-        
+        if($pname === false) $this->redirect("/admin/users");
+        $users = $this->databases->get_mysql_database_by_id()->get_model();
+        if(regex::is_numeric($pname))
+        {
+            $user = $users->get_user_by_id($pname);
+        }
+        else if(regex::is_slug($pname))
+        {
+            $user = $users->get_user_by_name($pname);
+        }
+        else
+        {
+            $this->redirect("/admin/users");
+        }
+        if($user)
+        {
+            $this->send($user,"user");
+        }
+        else
+        {
+            $this->redirect("/admin/users");
+        }
+        $this->send($users->get_controller_views(200),"pages");
+        $this->send($users->get_options(200),"options");
+        $this->send($users->get_permissions(200),"permissions");
     }
 
     public function system()

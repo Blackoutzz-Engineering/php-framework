@@ -3531,7 +3531,7 @@ class model extends database_model
                         "granted" => $pgranted
                     );
                     $new_user_permission = new user_permission($pdata);
-                    if($new_user_permission->save()) $new_user_permission;
+                    if($new_user_permission->save()) return $new_user_permission;
                 }
                 throw new exception("Something went wrong with the query from the model");
             }
@@ -4725,7 +4725,8 @@ class model extends database_model
         {
             if($this->get_connection()->is_connected())
             {
-                if($data = $this->get_connection()->get_prepared_select_query("SELECT * FROM `user_group_controller_views` WHERE id=? LIMIT 1","i",array($pid)))
+                $id = intval($pid);
+                if($data = $this->get_connection()->get_prepared_select_query("SELECT * FROM `user_group_controller_views` WHERE id=? LIMIT 1","i",array($id)))
                 {
                     foreach($data as $pdata)
                     {
@@ -4738,7 +4739,7 @@ class model extends database_model
         } 
         catch(exception $e)
         {
-            return new dataset_array();
+            return false;
         }
     }
 

@@ -37,10 +37,11 @@ use core\backend\database\dataset_array;
                                 echo '<tr>';
                                 echo '<th scope="row">'.$group_permission->get_permission()->get_name().'</th>';
                                 echo '<td>'.$group_permission->get_permission()->get_description().'</td>';
-                                if($group_permission->granted == true){
-                                    echo '<td><i class="fa fa-2x fa-toggle-on" name="user_group_permissions" status="granted" id="'.$group_permission->get_id().'"></i></td>';
+                                if($group_permission->granted == true)
+                                {
+                                    echo '<td><i class="fa fa-2x fa-toggle-on" name="user_group_permission" alt="granted" id="'.$group_permission->get_id().'"></i></td>';
                                 } else {
-                                    echo '<td><i class="fa fa-2x fa-toggle-off" name="user_group_permissions" status="denied" id="'.$group_permission->get_id().'"></i></td>';
+                                    echo '<td><i class="fa fa-2x fa-toggle-off" name="user_group_permission" alt="denied" id="'.$group_permission->get_id().'"></i></td>';
                                 }
                                 echo '</tr>';
                             }
@@ -112,14 +113,17 @@ use core\backend\database\dataset_array;
                     </thead>
                     <tbody>
                         <?php
-                        if($group->get_controller_views() != array()){
-                            foreach($group->get_controller_views() as $group_controller_view){
+                        if($group->get_controller_views() != array())
+                        {
+                            foreach($group->get_controller_views() as $group_controller_view)
+                            {
                                 echo('<tr>');
                                 echo('<th scope="row">'.$group_controller_view->get_controller_view().'</th>');
-                                if($group_permission->granted == true){
-                                    echo('<td><i class="fa fa-2x fa-toggle-on" name="user_group_controller_views" status="granted" id="'.$group_controller_view->get_id().'"></i></td>');
+                                if($group_permission->granted == true)
+                                {
+                                    echo('<td><i class="fa fa-2x fa-toggle-on" name="user_group_controller_view" status="granted" id="'.$group_controller_view->get_id().'"></i></td>');
                                 } else {
-                                    echo('<td><i class="fa fa-2x fa-toggle-off" name="user_group_controller_views" status="denied" id="'.$group_controller_view->get_id().'"></i></td>');
+                                    echo('<td><i class="fa fa-2x fa-toggle-off" name="user_group_controller_view" status="denied" id="'.$group_controller_view->get_id().'"></i></td>');
                                 }
                                 echo('</tr>');
                             }

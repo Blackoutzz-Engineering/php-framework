@@ -46,24 +46,24 @@ class user_controller_view extends dataset
         return false;
     }
 
-    public  function get_controller()
+    public  function get_controller_view()
     {
-        return $this->database()->get_model()->get_controller_by_id($this->controller);
+        return $this->database()->get_model()->get_controller_view_by_id($this->controller_view);
     }
 
-    public  function set_controller($pcontroller)
+    public  function set_controller_view($pcontroller_view)
     {
-        if($this->database()->get_model()->is_controller($pcontroller))
+        if($this->database()->get_model()->is_controller_view($pcontroller_view))
         {
-            $this->controller = $pcontroller->get_id();
+            $this->controller_view = $pcontroller_view->get_id();
             return true;
         }
-        if($pcontroller != NULL && is_integer($pcontroller))
+        if($pcontroller_view != NULL && is_integer($pcontroller_view))
         {
-            $new_controller = $this->database()->get_model()->get_controller_by_id($pcontroller);
-            if($new_controller != NULL && $this->database()->get_model()->is_controller($new_controller))
+            $new_controller_view = $this->database()->get_model()->get_controller_by_id($pcontroller_view);
+            if($new_controller_view != NULL && $this->database()->get_model()->is_controller_view($new_controller_view))
             {
-                $this->controller = $new_controller->get_id();
+                $this->controller_view = $new_controller_view->get_id();
                 return true;
             }
         }

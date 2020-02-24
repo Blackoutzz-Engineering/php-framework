@@ -19,16 +19,22 @@ use core\common\str;
 
 class admin extends ajax
 {
-//  reviewed tested
+
+    protected function on_initialize()
+    {
+        //$this->require_authentication();
+        $this->require_group(array("Admin","Moderator"));
+    }
+
     public function get_users()
     {
         $model = $this->databases->get_mysql_database_by_id()->get_model();
         $users = $model->get_users();
         $this->send($users,"users");
-//        $this->load_tab("users");
+        //$this->load_tab("users");
         return true;
     }
-//  Reviewed tested
+
     public function add_user()
     {
         if(isset($_REQUEST["email"]) && isset($_REQUEST["username"]) && isset($_REQUEST["group"]))
@@ -105,6 +111,105 @@ class admin extends ajax
         }
         return false;
     }
+
+    // reviewed tested
+    public function add_user_controller_view()
+    {
+        if(isset($_REQUEST["user"]) && isset($_REQUEST["page"]))
+        {
+            $model = $this->databases->get_mysql_database_by_id()->get_model();
+            if($model->create_user_controller_view($_REQUEST["user"],$_REQUEST["page"],1))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function update_user_group_controller_view($pid)
+    {
+        if($pid)
+        {
+            $id = intval($pid);
+            $model = $this->databases->get_mysql_database_by_id()->get_model();
+            if($page = $model->get_user_group_controller_view_by_id($id))
+            {
+                if($page->is_granted())
+                {
+                    $page->set_granted(false);
+                    return $page->save();
+                } else {
+                    $page->set_granted(true);
+                    return $page->save();
+                }
+            }
+        }
+        return false;
+    }
+
+    public function update_user_group_permission($pid)
+    {
+        if($pid)
+        {
+            $id = intval($pid);
+            $model = $this->databases->get_mysql_database_by_id()->get_model();
+            if($page = $model->get_user_group_permission_by_id($id))
+            {
+                if($page->is_granted())
+                {
+                    $page->set_granted(false);
+                    return $page->save();
+                } else {
+                    $page->set_granted(true);
+                    return $page->save();
+                }
+            }
+        }
+        return false;
+    }
+    
+    public function update_user_controller_view($pid)
+    {
+        if($pid)
+        {
+            $id = intval($pid);
+            $model = $this->databases->get_mysql_database_by_id()->get_model();
+            if($page = $model->get_user_controller_view_by_id($id))
+            {
+                if($page->is_granted())
+                {
+                    $page->set_granted(false);
+                    return $page->save();
+                } else {
+                    $page->set_granted(true);
+                    return $page->save();
+                }
+            }
+        }
+        return false;
+    }
+
+    public function update_user_permission($pid)
+    {
+        if($pid)
+        {
+            $id = intval($pid);
+            $model = $this->databases->get_mysql_database_by_id()->get_model();
+            if($page = $model->get_user_permission_by_id($id))
+            {
+                if($page->is_granted())
+                {
+                    $page->set_granted(false);
+                    return $page->save();
+                } else {
+                    $page->set_granted(true);
+                    return $page->save();
+                }
+            }
+        }
+        return false;
+    }
+
 // reviewed tested
     public function add_user_group_option()
     {
@@ -132,6 +237,33 @@ class admin extends ajax
         }
         return false;
     }
+
+    public function add_user_option()
+    {
+        if(isset($_REQUEST["user"]) && isset($_REQUEST["option"]) && isset($_REQUEST["value"]))
+        {
+            $model = $this->databases->get_mysql_database_by_id()->get_model();
+            if ($model->create_user_option($_REQUEST["group"], $_REQUEST["option"], $_REQUEST["value"]))
+            {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+// reviewed tested
+    public function add_user_permission()
+    {
+        if(isset($_REQUEST["user"]) && isset($_REQUEST["permission"]))
+        {
+            $model = $this->databases->get_mysql_database_by_id()->get_model();
+            if($model->create_user_permission($_REQUEST["user"],$_REQUEST["permission"],1))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 // reviewed tested
     public function add_permission()
     {
@@ -146,6 +278,44 @@ class admin extends ajax
         }
         return false;
     }
+
+    public function add_permission_controller_view()
+    {
+        if($this->user->can("Admin Access"))
+        {
+            if(isset($_REQUEST["page"]) && isset($_REQUEST["permission"]))
+            {
+                $model = $this->databases->get_mysql_database_by_id()->get_model();
+                if($model->create_permission_controller_view(intval($_REQUEST["permission"]),$_REQUEST["page"],1))
+                {
+                    return true;
+                }
+            }
+        }
+        return 0;
+    }
+
+    public function update_permission_controller_view($pid)
+    {
+        if($pid)
+        {
+            $id = intval($pid);
+            $model = $this->databases->get_mysql_database_by_id()->get_model();
+            if($page = $model->get_permission_controller_view_by_id($id))
+            {
+                if($page->is_granted())
+                {
+                    $page->set_granted(false);
+                    return $page->save();
+                } else {
+                    $page->set_granted(true);
+                    return $page->save();
+                }
+            }
+        }
+        return false;
+    }
+
 //    lets not touch it for now
     public function add_plugins()
     {
