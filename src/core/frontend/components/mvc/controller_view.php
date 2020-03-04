@@ -123,7 +123,7 @@ class controller_view extends template
         try
         {
             $layout = "dashboard";
-            if(!include("ui".DS."themes".DS.$layout.DS."index.php"))
+            if(!include(program::$path."ui".DS."themes".DS.$layout.DS."index.php"))
             {
                 throw new exception("Impossible to load application theme named '{$layout}'.");
             }
@@ -180,11 +180,11 @@ class controller_view extends template
             $view_name = $this->get_view_name();
             if($this->reference === "core")
             {
-                if(!include("ui".DS."views".DS.$controller_name.DS.$view_name.".php"))
+                if(!include(program::$path."ui".DS."views".DS.$controller_name.DS.$view_name.".php"))
                 {
-                    $new_view = new file("ui".DS."views".DS.$controller_name.DS.$view_name.".php");
+                    $new_view = new file(program::$path."ui".DS."views".DS.$controller_name.DS.$view_name.".php");
                     $new_view->set_contents("<div class='alert alert-warning'>Brand new page without content.</div>");
-                    if(!include("ui".DS."views".DS.$controller_name.DS.$view_name.".php"))
+                    if(!include(program::$path."ui".DS."views".DS.$controller_name.DS.$view_name.".php"))
                        throw new exception("Impossible to load view on '{$controller_name}/{$view_name}'.");
                 }
                 $this->load_script();
@@ -193,11 +193,11 @@ class controller_view extends template
                 if(!$this->cache->is_saved() || !$this->cache->is_required())
                 {
                     $this->push();
-                    if(!include("plugins".DS.$this->reference.DS."ui".DS."views".DS.$controller_name.DS.$view_name.".php"))
+                    if(!include(program::$path."plugins".DS.$this->reference.DS."ui".DS."views".DS.$controller_name.DS.$view_name.".php"))
                     {
-                        $new_view = new file("plugins".DS.$this->reference.DS."ui".DS."views".DS.$controller_name.DS.$view_name.".php");
+                        $new_view = new file(program::$path."plugins".DS.$this->reference.DS."ui".DS."views".DS.$controller_name.DS.$view_name.".php");
                         $new_view->set_contents("<div class='alert alert-warning'>Brand new page without content.</div>");
-                        if(!include("plugins".DS.$this->reference.DS."ui".DS."views".DS.$controller_name.DS.$view_name.".php"))
+                        if(!include(program::$path."plugins".DS.$this->reference.DS."ui".DS."views".DS.$controller_name.DS.$view_name.".php"))
                             throw new exception("Impossible to load view on '{$controller_name}/{$view_name}'.");
                     }
                     $this->load_script();
@@ -208,11 +208,11 @@ class controller_view extends template
                 } else {
                     if(!$this->cache->restore_saved_view())
                     {
-                        if(!include("plugins".DS.$this->reference.DS."ui".DS."views".DS.$controller_name.DS.$view_name.".php"))
+                        if(!include(program::$path."plugins".DS.$this->reference.DS."ui".DS."views".DS.$controller_name.DS.$view_name.".php"))
                         {
-                            $new_view = new file("plugins".DS.$this->reference.DS."ui".DS."views".DS.$controller_name.DS.$view_name.".php");
+                            $new_view = new file(program::$path."plugins".DS.$this->reference.DS."ui".DS."views".DS.$controller_name.DS.$view_name.".php");
                             $new_view->set_contents("<div class='alert alert-warning'>Brand new page without content.</div>");
-                            if(!include("plugins".DS.$this->reference.DS."ui".DS."views".DS.$controller_name.DS.$view_name.".php"))
+                            if(!include(program::$path."plugins".DS.$this->reference.DS."ui".DS."views".DS.$controller_name.DS.$view_name.".php"))
                                 throw new exception("Impossible to load view on '{$controller_name}/{$view_name}'.");
                         }
                         $this->load_script();
@@ -237,19 +237,19 @@ class controller_view extends template
             {
                 if($pname === false)
                 {
-                    if(!include("ui".DS."tabs".DS.$controller_name.DS.$view_name.DS."index.php"))
+                    if(!include(program::$path."ui".DS."tabs".DS.$controller_name.DS.$view_name.DS."index.php"))
                     {
-                        $new_view = new file("ui".DS."tabs".DS.$controller_name.DS.$view_name.DS."index.php");
+                        $new_view = new file(program::$path."ui".DS."tabs".DS.$controller_name.DS.$view_name.DS."index.php");
                         $new_view->set_contents("<div class='alert alert-warning'>Brand new tab without content.</div>");
-                        if(!include("ui".DS."tabs".DS.$controller_name.DS.$view_name.DS."index.php"))
+                        if(!include(program::$path."ui".DS."tabs".DS.$controller_name.DS.$view_name.DS."index.php"))
                             throw new exception("Impossible to load tab on '{$controller_name}/{$view_name}'.");
                     }
                 } else {
-                    if(!include("ui".DS."tabs".DS.$controller_name.DS.$view_name.DS.$pname.".php"))
+                    if(!include(program::$path."ui".DS."tabs".DS.$controller_name.DS.$view_name.DS.$pname.".php"))
                     {
-                        $new_view = new file("ui".DS."tabs".DS.$controller_name.DS.$view_name.DS.$pname.".php");
+                        $new_view = new file(program::$path."ui".DS."tabs".DS.$controller_name.DS.$view_name.DS.$pname.".php");
                         $new_view->set_contents("<div class='alert alert-warning'>Brand new tab without content.</div>");
-                        if(!include("ui".DS."tabs".DS.$controller_name.DS.$view_name.DS.$pname.".php"))
+                        if(!include(program::$path."ui".DS."tabs".DS.$controller_name.DS.$view_name.DS.$pname.".php"))
                             throw new exception("Impossible to load tab on '{$controller_name}/{$view_name}/{$pname}'.");
                     }
                 }
@@ -257,19 +257,19 @@ class controller_view extends template
             } else {
                 if($pname === false)
                 {
-                    if(!include("plugins".DS.$this->reference.DS."interface".DS."tabs".DS.$controller_name.DS.$view_name.".php"))
+                    if(!include(program::$path."plugins".DS.$this->reference.DS."interface".DS."tabs".DS.$controller_name.DS.$view_name.".php"))
                     {
-                        $new_view = new file("plugins".DS.$this->reference.DS."ui".DS."tabs".DS.$controller_name.DS.$view_name.".php");
+                        $new_view = new file(program::$path."plugins".DS.$this->reference.DS."ui".DS."tabs".DS.$controller_name.DS.$view_name.".php");
                         $new_view->set_contents("<div class='alert alert-warning'>Brand new tab without content.</div>");
-                        if(!include("plugins".DS.$this->reference.DS."ui".DS."tabs".DS.$controller_name.DS.$view_name.".php"))
+                        if(!include(program::$path."plugins".DS.$this->reference.DS."ui".DS."tabs".DS.$controller_name.DS.$view_name.".php"))
                             throw new exception("Impossible to load tab on '{$controller_name}/{$view_name}'.");
                     }
                 } else {
-                    if(!include("plugins".DS.$this->reference.DS."interface".DS."tabs".DS.$controller_name.DS.$view_name.DS.$pname.".php"))
+                    if(!include(program::$path."plugins".DS.$this->reference.DS."interface".DS."tabs".DS.$controller_name.DS.$view_name.DS.$pname.".php"))
                     {
-                        $new_view = new file("plugins".DS.$this->reference.DS."ui".DS."tabs".DS.$controller_name.DS.$view_name.DS.$pname.".php");
+                        $new_view = new file(program::$path."plugins".DS.$this->reference.DS."ui".DS."tabs".DS.$controller_name.DS.$view_name.DS.$pname.".php");
                         $new_view->set_contents("<div class='alert alert-warning'>Brand new tab without content.</div>");
-                        if(!include("plugins".DS.$this->reference.DS."ui".DS."tabs".DS.$controller_name.DS.$view_name.DS.$pname.".php"))
+                        if(!include(program::$path."plugins".DS.$this->reference.DS."ui".DS."tabs".DS.$controller_name.DS.$view_name.DS.$pname.".php"))
                             throw new exception("Impossible to load tab on '{$controller_name}/{$view_name}/{$pname}'.");
                     }
                 }
