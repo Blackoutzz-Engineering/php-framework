@@ -123,7 +123,10 @@ class request
             $header = substr($response, 0, $header_size);
             $body = substr($response, $header_size);
             $code = curl_getinfo($this->request,CURLINFO_HTTP_CODE);
-            $error = new exception(curl_error($this->request),curl_errno($this->request),$this->options);
+            if($error = curl_error($this->request))
+            {
+                $error = new exception(curl_error($this->request),curl_errno($this->request),$this->options);
+            }
             $this->result = new request_result($code,$header,$body,$error);
             return $this->result;
         } else {
