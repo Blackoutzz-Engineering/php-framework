@@ -5,6 +5,7 @@ RUN apt-get install -y openssl libssl-dev libcurl4-openssl-dev git
 RUN docker-php-ext-install mysqli
 RUN docker-php-ext-install curl
 RUN apt-get install -y sendmail sendmail-bin
+RUN pecl install msgpack
 RUN a2enmod rewrite
 copy ./run.sh /
 copy ./html /var/www/html

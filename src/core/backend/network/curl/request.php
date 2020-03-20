@@ -90,25 +90,32 @@ class request
     {
         if(!$this->result instanceof request_result)
         {
-            if(count($this->headers) >= 1)
-            {
-                curl_setopt($this->request,CURLOPT_HTTPHEADER,$this->headers->get_http_headers());
-            }
             if(count($this->posts) >= 1)
             {
                 curl_setopt($this->request,CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($this->request,CURLOPT_POSTREDIR,3);
                 if($this->posts->contains_form() || $this->posts->contains_file_upload())
                 {
-                    $this->headers["Content-Type"] = "Content-Type: multipart/form-data";
+                    $this->headers["Content-Type"] ??= "Content-Type: multipart/form-data";
                 }
                 else
                 {
-                    $this->headers["Content-Type"] = "Content-Type: application/x-www-form-urlencoded";
+                    $this->headers["Content-Type"] ??= "Content-Type: application/x-www-form-urlencoded";
                 }
-
+                if($this->headers["Content-Type"] == "Content-Type: binary/message-pack")
+                {
+                    curl_setopt($this->request,CURLOPT_POSTFIELDS,\msgpack_pack($this->posts->get_data()));
+                } 
+                else 
+                {
+                    curl_setopt($this->request,CURLOPT_POSTFIELDS,$this->posts->get_postfields());
+                }
                 curl_setopt($this->request,CURLOPT_POST,true);
-                curl_setopt($this->request,CURLOPT_POSTFIELDS,$this->posts->get_postfields());
+                
+            }
+            if(count($this->headers) >= 1)
+            {
+                curl_setopt($this->request,CURLOPT_HTTPHEADER,$this->headers->get_http_headers());
             }
             $response = curl_exec($this->request);
             //Extract Result

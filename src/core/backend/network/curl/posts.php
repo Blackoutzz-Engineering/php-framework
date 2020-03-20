@@ -182,4 +182,14 @@ class posts implements \Iterator , \ArrayAccess, \Countable
 
     }
 
+    public function get_data()
+    {
+        $postfields = array();
+        foreach($this->array as $post)
+        {
+            $postfields[$post->get_key()] = $post->get_value();
+        }
+        return $postfields;
+    }
+
 }

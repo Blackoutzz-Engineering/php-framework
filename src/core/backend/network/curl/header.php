@@ -23,7 +23,7 @@ class header
         {
             # here a verification through a regex is done to see if it actually is a header and an array
             # 
-            if(preg_match("~^([^:]+)[:](.*)$~m",$pheader,$array))
+            if(preg_match("~^([^:]+)[:]\s*(.*)$~m",$pheader,$array))
             {
                 $this->key = $array[1];
                 $this->value = $array[2];

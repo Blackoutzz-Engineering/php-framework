@@ -83,12 +83,36 @@ class request_result
 
     public function get_contents()
     {
-        $content_type = $this->get_header("content-type");
-        if(preg_match('~^((?:application|text)/json);?.*$~im',$content_type))
+        try
         {
-            return json_decode($this->body);
+            $content_type = $this->get_header("content-type");
+            if(preg_match('~^(text/(?:html|xml));?.*$~im',$content_type))
+            {
+                return $this->body;
+            }
+            elseif(preg_match('~^((?:application|text)/json);?.*$~im',$content_type))
+            {
+                if(function_exists("json_decode"))
+                {
+                    return json_decode($this->body);
+                }
+                throw new exception("Missing Json Library");
+            } 
+            elseif(preg_match('~^(binary/message-pack);?.*$~im',$content_type))
+            {
+                if(function_exists("msgpack_unpack"))
+                {
+                    return \msgpack_unpack($this->body);
+                }
+                throw new exception("Missing MSGPACK Library");
+            }
+            throw new exception("Unhandled curl_request_result content-type : ".$content_type);
         }
-        return $this->body;
+        catch(exception $e)
+        {
+            return $this->body;
+        }
+        
     }
 
     public function is_received()
