@@ -198,9 +198,9 @@ abstract class str
                     return gzdecode($pstring);
                 }
             }
-            throw new Exception("Impossible to uncompress.");
+            throw new exception("Impossible to uncompress.");
         } 
-        catch (Exception $e)
+        catch (exception $e)
         {
             return $pstring;
         }
@@ -250,7 +250,7 @@ abstract class str
             }
             return false;
         } 
-        catch (Exception $e)
+        catch (exception $e)
         {
             return false;
         }
@@ -262,7 +262,7 @@ abstract class str
         {
             if(is_string($pdata))
             {
-                if($psanitized) $pdata = sstr::sanitize($pdata);
+                if($psanitized) $pdata = self::sanitize($pdata);
                 echo($pdata);
                 return true;
             }
@@ -310,7 +310,7 @@ abstract class str
         {
             if(is_string($pdata))
             {
-                if($psanitized) $pdata = sstr::sanitize($pdata);
+                if($psanitized) $pdata = self::sanitize($pdata);
                 echo($pdata."\n");
                 return true;
             }

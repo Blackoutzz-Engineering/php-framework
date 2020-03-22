@@ -94,6 +94,7 @@ class request
             {
                 curl_setopt($this->request,CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($this->request,CURLOPT_POSTREDIR,3);
+                curl_setopt($this->request,CURLOPT_POST,true);
                 if($this->posts->contains_form() || $this->posts->contains_file_upload())
                 {
                     $this->headers["Content-Type"] ??= "Content-Type: multipart/form-data";
@@ -105,13 +106,11 @@ class request
                 if($this->headers["Content-Type"] == "Content-Type: binary/message-pack")
                 {
                     curl_setopt($this->request,CURLOPT_POSTFIELDS,\msgpack_pack($this->posts->get_data()));
-                } 
+                }
                 else 
                 {
                     curl_setopt($this->request,CURLOPT_POSTFIELDS,$this->posts->get_postfields());
                 }
-                curl_setopt($this->request,CURLOPT_POST,true);
-                
             }
             if(count($this->headers) >= 1)
             {
