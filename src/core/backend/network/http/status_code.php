@@ -239,8 +239,8 @@ abstract class status_code
             case self::unavailable_for_legal_reasons:
                 return true;
             default:
-                if(self::crashed($pstatus_code)) return true;
-                if(self::blocked($pstatus_code)) return true;
+                if(self::is_crashed($pstatus_code)) return true;
+                if(self::is_blocked($pstatus_code)) return true;
                 return false;
         }
     }
