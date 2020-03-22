@@ -41,7 +41,7 @@ abstract class mvc extends program
                 $instance = self::$routing->get_controller_instance();
                 return $instance->initialize();
             } 
-            die("Please rebuild the docker container");     
+            die("Please rebuild the docker container"); 
         }
         catch (exception $e)
         {

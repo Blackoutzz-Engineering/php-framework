@@ -1,7 +1,7 @@
 <?php
 namespace core\common;
 use core\common\charsets\ascii;
-use core\exception;
+use core\common\exception;
 use core\common\regex as sregex;
 use core\common\components\regex;
 
