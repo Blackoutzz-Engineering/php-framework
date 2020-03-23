@@ -930,7 +930,7 @@ abstract class file
         try
         {
             $old_filepath = self::get_path($pfilepath);
-            $new_filepath = self::get_folder($old_filepath).$pnew_name.DS;
+            $new_filepath = self::get_folder($old_filepath).$pnew_name;
             if(self::exist($old_filepath))
             {
                 if(rename($old_filepath,$new_filepath))

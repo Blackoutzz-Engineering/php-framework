@@ -289,7 +289,7 @@ abstract class folder
         }
         catch (Exception $e)
         {
-            return array();
+            return false;
         }
     }
 

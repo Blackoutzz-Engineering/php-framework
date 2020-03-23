@@ -134,7 +134,12 @@ class file
 
     public function move($pnew_filepath)
     {
-        return static_file::move($this->filepath,$pnew_filepath);
+        if(static_file::move($this->filepath,$pnew_filepath))
+        {
+            $this->filepath = static_file::get_path($pnew_filepath);
+            return true;
+        } 
+        return false;
     }
 
     public function get_lines()
@@ -195,7 +200,12 @@ class file
 
     public function rename($pnew_name)
     {
-        return static_file::rename($this->filepath,$pnew_name);
+        if(static_file::rename($this->filepath,$pnew_name))
+        {
+            $this->filepath = static_file::get_path($this->get_folder().$pnew_name);
+            return true;
+        } 
+        return false;
     }
 
 }
