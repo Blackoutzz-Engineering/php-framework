@@ -2,6 +2,7 @@
 namespace core\backend\filesystem;
 use core\common\exception;
 use core\common\str;
+use core\backend\filesystem\folder as static_folder;
 
 /**
  * Static File Library.
@@ -98,7 +99,8 @@ abstract class file
         try
         {
             $filepath = self::get_path($pfilepath);
-            if(is_file($filepath)){
+            if(is_file($filepath))
+            {
                 if(preg_match('~^(.*[\\\\\/])[^\\\\\/]+$~im',$filepath,$folderpath))
                 {
                     if(is_dir($folderpath[1]))
@@ -111,7 +113,7 @@ abstract class file
                     throw new exception("File {$filepath} doesn't seems to have a folder");
                 }
             } else {
-                return false;
+                throw new exception("File {$filepath} doesn't seems to exist");
             }
         }
         catch (Exception $e)
@@ -930,7 +932,7 @@ abstract class file
         try
         {
             $old_filepath = self::get_path($pfilepath);
-            $new_filepath = self::get_folder($old_filepath).$pnew_name;
+            $new_filepath = static_folder::get_folder($old_filepath).$pnew_name;
             if(self::exist($old_filepath))
             {
                 if(rename($old_filepath,$new_filepath))

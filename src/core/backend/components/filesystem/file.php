@@ -134,9 +134,10 @@ class file
 
     public function move($pnew_filepath)
     {
+        $final_filepath = static_file::get_path($this->get_folder().$pnew_name);
         if(static_file::move($this->filepath,$pnew_filepath))
         {
-            $this->filepath = static_file::get_path($pnew_filepath);
+            $this->filepath = $final_filepath;
             return true;
         } 
         return false;
@@ -199,10 +200,11 @@ class file
     }
 
     public function rename($pnew_name)
-    {
+    {   
+        $final_filepath = static_file::get_path($this->get_folder().$pnew_name);
         if(static_file::rename($this->filepath,$pnew_name))
         {
-            $this->filepath = static_file::get_path($this->get_folder().$pnew_name);
+            $this->filepath = $final_filepath;
             return true;
         } 
         return false;
