@@ -19,7 +19,7 @@ use core\common\sorting_order;
 class dataset_array extends stack
 {
 
-    public function order_by($pvariable_name = "name",$psorting_order = table_model_array_sorting_order::ascending_order)
+    public function order_by($pvariable_name = "name",$psorting_order = sorting_order::ascending)
     {
         if(!is_string($pvariable_name)) return $this->array;
         $new_array = array();
@@ -43,7 +43,7 @@ class dataset_array extends stack
         return $this->array;
     }
 
-    public function get_ordered_by($pvariable_name = "name",$psorting_order = table_model_array_sorting_order::ascending_order)
+    public function get_ordered_by($pvariable_name = "name",$psorting_order = sorting_order::ascending)
     {
         if(!is_string($pvariable_name)) return $this->array;
         $new_array = array();
@@ -61,8 +61,9 @@ class dataset_array extends stack
         }
         if(sorting_order::ascending == $psorting_order) ksort($new_array);
         elseif(sorting_order::descending == $psorting_order) krsort($new_array);
-        else return $this->array();
-        return $new_array;
+        else return $this->array;
+
+        return array_values($new_array);
     }
 
     public function where($pvariable_name = "name",$pvalue)
