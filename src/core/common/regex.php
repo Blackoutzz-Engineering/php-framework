@@ -1,6 +1,6 @@
 <?php
 namespace core\common;
-use core\exception;
+use core\common\exception;
 
 /**
  * static regex short summary.
