@@ -122,7 +122,7 @@ abstract class file
         }
     }
 
-    static function get_size($pfilepath)
+    static function get_size($pfilepath,$praw = false)
     {
         try
         {
@@ -130,6 +130,7 @@ abstract class file
             if(is_file($filepath))
             {
                 $size = filesize($filepath);
+                if($praw) return $size;
                 $units = array(
                     "TB" => 1099511627776,
                     "GB" => 1073741824,
@@ -154,6 +155,7 @@ abstract class file
             return false;
         }
     }
+    
 
     static function get_owner($pfilepath)
     {

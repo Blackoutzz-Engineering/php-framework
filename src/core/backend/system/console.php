@@ -47,7 +47,7 @@ abstract class console extends program
                     {
                         if(is_string($value))
                         {
-                            if(!preg_match("~^ *-*[A-z0-9]+ *$~im",$value)) $value = escapeshellarg($value);
+                            if(!preg_match("~^ *-*[A-z0-9\,\.]+ *$~im",$value)) $value = escapeshellarg($value);
                         }
                         if(is_int($key) || is_integer($key) || is_numeric($key))
                         {
@@ -65,6 +65,11 @@ abstract class console extends program
                             }
                         }
                     }
+                } 
+                elseif(is_string($pparams))
+                {
+                    //TODO automate the params protection
+                    $params = $pparams;
                 }
                 $output = shell_exec($command." {$params} 2>&1");
                 //tput protection

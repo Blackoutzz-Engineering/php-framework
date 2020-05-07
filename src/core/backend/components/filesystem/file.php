@@ -52,9 +52,9 @@ class file
         return static_file::get_folder($this->filepath);
     }
 
-    public function get_size()
+    public function get_size($praw = false)
     {
-        return static_file::get_size($this->filepath);
+        return static_file::get_size($this->filepath , $praw);
     }
 
     public function get_owner()
