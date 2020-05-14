@@ -134,7 +134,7 @@ class file
 
     public function move($pnew_filepath)
     {
-        $final_filepath = static_file::get_path($this->get_folder().$pnew_name);
+        $final_filepath = static_file::get_path($pnew_filepath);
         if(static_file::move($this->filepath,$pnew_filepath))
         {
             $this->filepath = $final_filepath;
