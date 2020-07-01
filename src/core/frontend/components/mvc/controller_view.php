@@ -143,26 +143,163 @@ class controller_view extends template
             $view_name = $this->routing->get_view_name();
             if($this->reference === "core")
             {
-                if(is_file("assets".DS."scripts".DS.$controller_name.DS.$view_name.".js"))
+                if($name)
                 {
-                    if($name != "")
+                    if(is_file("assets".DS."scripts".DS."{$name}.min.js"))
+                    {
+                        echo ("<script src='/assets/scripts/{$name}.min.js'></script>");
+                    } 
+                    elseif(is_file("assets".DS."scripts".DS."{$name}.js"))
                     {
                         echo ("<script src='/assets/scripts/{$name}.js'></script>");
                     } else {
-                        echo ("<script src='/assets/scripts/".$controller_name."/".$view_name.".js'></script>");
+                        return false;
+                    }
+                    if(is_file("assets".DS."scripts".DS."{$name}.js.map"))
+                    {
+                        echo ("<script src='/assets/scripts/{$name}.js.map'></script>");
+                    }
+                    if(is_file("assets".DS."scripts".DS."{$name}.vendors.js"))
+                    {
+                        echo ("<script src='/assets/scripts/{$name}.vendors.js'></script>");
+                    }
+                } else {
+                    if(is_file("assets".DS."scripts".DS.$controller_name.DS.$view_name.".min.js"))
+                    {
+                        echo ("<script src='/assets/scripts/{$controller_name}/{$view_name}.min.js'></script>");
+                    } 
+                    elseif(is_file("assets".DS."scripts".DS.$controller_name.DS.$view_name.".js"))
+                    {
+                        echo ("<script src='/assets/scripts/{$controller_name}/{$view_name}.js'></script>");
+                    } else {
+                        return false;
+                    }
+                    if(is_file("assets".DS."scripts".DS.$controller_name.DS.$view_name.".js.map"))
+                    {
+                        echo ("<script src='/assets/scripts/{$controller_name}/{$view_name}.js.map'></script>");
+                    }
+                    if(is_file("assets".DS."scripts".DS.$controller_name.DS.$view_name.".vendors.js"))
+                    {
+                        echo ("<script src='/assets/scripts/{$controller_name}/{$view_name}.vendors.js'></script>");
                     }
                 }
                 return true;
             } else {
-                if(is_file("plugins".DS.$this->reference.DS."assets".DS."scripts".DS.$controller_name.DS.$view_name.".js"))
+                if($name)
                 {
-                    if($name != "")
+                    if(is_file("plugins".DS.$this->reference.DS."assets".DS."scripts".DS."{$name}.min.js"))
+                    {
+                        echo ("<script src='/plugins/{$this->reference}/assets/scripts/{$name}.min.js'></script>");
+                    }
+                    elseif(is_file("plugins".DS.$this->reference.DS."assets".DS."scripts".DS."{$name}.js"))
                     {
                         echo ("<script src='/plugins/{$this->reference}/assets/scripts/{$name}.js'></script>");
                     } else {
+                        return false;
+                    }
+                    if(is_file("plugins/{$this->reference}/assets".DS."scripts".DS."{$name}.js.map"))
+                    {
+                        echo ("<script src='/plugins/{$this->reference}/assets/scripts/{$name}.js.map'></script>");
+                    }
+                    if(is_file("plugins/{$this->reference}/assets".DS."scripts".DS."{$name}.vendors.js"))
+                    {
+                        echo ("<script src='/plugins/{$this->reference}/assets/scripts/{$name}.vendors.js'></script>");
+                    }
+                } else {
+                    if(is_file("plugins".DS.$this->reference.DS."assets".DS."scripts".DS.$controller_name.DS.$view_name.".min.js"))
+                    {
                         echo ("<script src='/plugins/{$this->reference}/assets/scripts/".$controller_name."/".$view_name.".js'></script>");
                     }
+                    elseif(is_file("plugins".DS.$this->reference.DS."assets".DS."scripts".DS.$controller_name.DS.$view_name.".js"))
+                    {
+                        echo ("<script src='/plugins/{$this->reference}/assets/scripts/".$controller_name."/".$view_name.".js'></script>");
+                    } else {
+                        return false;
+                    }
+                    if(is_file("plugins".DS.$this->reference.DS."assets".DS."scripts".DS.$controller_name.DS.$view_name.".js.map"))
+                    {
+                        echo ("<script src='/plugins/{$this->reference}/assets/scripts/{$controller_name}/{$view_name}.js.map'></script>");
+                    }
+                    if(is_file("plugins".DS.$this->reference.DS."assets".DS."scripts".DS.$controller_name.DS.$view_name.".vendors.js"))
+                    {
+                        echo ("<script src='/plugins/{$this->reference}/assets/scripts/{$controller_name}/{$view_name}.vendors.js'></script>");
+                    }
                 }
+                return true;
+            }
+        }
+        catch (exception $e)
+        {
+            return false;
+        }
+    }
+
+    protected function load_style($name="")
+    {
+        try
+        {
+            $controller_name = $this->routing->get_contoller_name();
+            $view_name = $this->routing->get_view_name();
+            if($this->reference === "core")
+            {
+                if($name)
+                {
+                    if(is_file("assets".DS."styles".DS."{$name}.min.css"))
+                    {
+                        echo ("<link href='/assets/styles/{$name}.min.css' rel=preload as=style />");
+                        echo ("<link href='/assets/styles/{$name}.min.css' rel=stylesheet />");
+                    } 
+                    elseif(is_file("assets".DS."styles".DS."{$name}.css"))
+                    {
+                        echo ("<link href='/assets/styles/{$name}.css' rel=preload as=style />");
+                        echo ("<link href='/assets/styles/{$name}.css' rel=stylesheet />");
+                    } else {
+                        return false;
+                    }
+                } else {
+                    if(is_file("assets".DS."styles".DS.$controller_name.DS.$view_name.".min.css"))
+                    {
+                        echo ("<link href='/assets/styles/".$controller_name."/".$view_name.".min.css' rel=preload as=style />");
+                        echo ("<link href='/assets/styles/".$controller_name."/".$view_name.".min.css' rel=stylesheet />");
+                    } 
+                    elseif(is_file("assets".DS."styles".DS.$controller_name.DS.$view_name.".css"))
+                    {
+                        echo ("<link href='/assets/styles/".$controller_name."/".$view_name.".css' rel=preload as=style />");
+                        echo ("<link href='/assets/styles/".$controller_name."/".$view_name.".css' rel=stylesheet />");
+                    } else {
+                        return false;
+                    }
+                }
+                return true;
+            } else {
+                
+                if($name)
+                {
+                    if(is_file("plugins".DS.$this->reference.DS."assets".DS."styles".DS.$controller_name.DS.$view_name.".min.css"))
+                    {
+                        echo ("<link href='/plugins/{$this->reference}/assets/styles/{$name}.min.css' rel=preload as=style />");
+                        echo ("<link href='/plugins/{$this->reference}/assets/styles/{$name}.min.css' rel=stylesheet />");
+                    } 
+                    elseif(is_file("plugins".DS.$this->reference.DS."assets".DS."styles".DS.$controller_name.DS.$view_name.".css"))
+                    {
+                        echo ("<link href='/plugins/{$this->reference}/assets/styles/{$name}.css' rel=preload as=style />");
+                        echo ("<link href='/plugins/{$this->reference}/assets/styles/{$name}.css' rel=stylesheet />");
+                    } else {
+                        return false;
+                    }
+                } else {
+                    if(is_file("plugins".DS.$this->reference.DS."assets".DS."styles".DS.$controller_name.DS.$view_name.".min.css"))
+                    {
+                        echo ("<link href='/plugins/{$this->reference}/assets/styles/".$controller_name."/".$view_name.".min.css' rel=preload as=style />");
+                        echo ("<link href='/plugins/{$this->reference}/assets/styles/".$controller_name."/".$view_name.".min.css' rel=stylesheet />");
+                    } elseif(is_file("plugins".DS.$this->reference.DS."assets".DS."styles".DS.$controller_name.DS.$view_name.".css")) {
+                        echo ("<link href='/plugins/{$this->reference}/assets/styles/".$controller_name."/".$view_name.".css' rel=preload as=style />");
+                        echo ("<link href='/plugins/{$this->reference}/assets/styles/".$controller_name."/".$view_name.".css' rel=stylesheet />");
+                    } else {
+                        return false;
+                    }
+                }
+                
                 return true;
             }
         }
